@@ -1,22 +1,19 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Colors from "../constants/Colors";
-
 import { Text, View } from "../components/Themed";
 
-export default function TabTwoScreen({ navigation }: any) {
+export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>Testing Screen</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <TouchableOpacity onPress={() => navigation.push("TabTwoTest")}>
-        <Text style={styles.testLink}>Go Test</Text>
-      </TouchableOpacity>
+      <View>
+        <Text>Hello this is a test</Text>
+      </View>
     </View>
   );
 }
@@ -35,9 +32,5 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
-  },
-  testLink: {
-    color: Colors.colors.blue[400],
-    fontSize: 18,
   },
 });

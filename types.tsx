@@ -9,14 +9,40 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Info: undefined;
+  Home: undefined;
+  Cart: undefined;
 };
 
 export type TabOneParamList = {
-  TabOneScreen: undefined;
+  Home: undefined;
+  ProductDetail: undefined;
 };
 
 export type TabTwoParamList = {
   TabTwoScreen: undefined;
+  TabTwoTest: undefined;
+};
+
+export type Product = {
+  id: number;
+  title: string;
+  description?: string;
+  img: string;
+  units: number;
+  price: number;
+  available?: boolean;
+  createdDate?: Date;
+  collection?: number;
+};
+
+export type State = {
+  cart: Product[];
+  cartFunctions: CartActions;
+};
+
+export type CartActions = {
+  addToCart: (product: Product) => void;
+  deleteFromCart: (id: number | string) => void;
+  clearCart: () => void;
 };
