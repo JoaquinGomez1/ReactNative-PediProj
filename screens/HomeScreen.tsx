@@ -1,26 +1,18 @@
 import * as React from "react";
 import { useContext } from "react";
-import { Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import Product from "../components/Product";
 import { Text, View } from "../components/Themed";
 import MyButton from "../components/Button";
 import cartContext from "../context/Cart";
-import { State } from "../types";
-
-const mockProduct = {
-  img: "https://m.media-amazon.com/images/I/61OL2zIliML._AC_UY218_.jpg",
-  description:
-    "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
-  title: "Playstation",
-  id: 123,
-  units: 10,
-  price: 360,
-};
+import { CartState } from "../types";
+import { productList } from "../constants/MockData";
+import GestureRecognizer from "react-native-swipe-gestures";
 
 export default function TabOneScreen({ navigation }: any) {
-  const { cartFunctions } = useContext<State>(cartContext);
+  const { cartFunctions } = useContext<CartState>(cartContext);
 
   return (
     <>
@@ -36,12 +28,19 @@ export default function TabOneScreen({ navigation }: any) {
             alignItems: "center",
           }}
         >
-          <Product navigation={navigation} product={mockProduct}>
-            <MyButton
-              title="Add To Cart"
-              onPress={() => cartFunctions.addToCart(mockProduct)}
-            />
-          </Product>
+          {productList.map((each) => (
+            <GestureRecognizer
+              key={each.id}
+              onSwipeRight={() => cartFunctions.addToCart(each)}
+            >
+              <Product navigation={navigation} product={each}>
+                <MyButton
+                  title="Add To Cart"
+                  onPress={() => cartFunctions.addToCart(each)}
+                />
+              </Product>
+            </GestureRecognizer>
+          ))}
         </ScrollView>
       </View>
     </>

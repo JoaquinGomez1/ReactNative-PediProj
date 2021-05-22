@@ -12,6 +12,9 @@ export type BottomTabParamList = {
   Info: undefined;
   Home: undefined;
   Cart: undefined;
+  Login: undefined;
+  SignUp: undefined;
+  User: undefined;
 };
 
 export type TabOneParamList = {
@@ -36,9 +39,28 @@ export type Product = {
   collection?: number;
 };
 
-export type State = {
+export type CartState = {
   cart: Product[];
   cartFunctions: CartActions;
+};
+
+export type User = {
+  id: number | string;
+  username: string;
+  email: string;
+  address: string;
+  password?: never; // Do not store user password
+};
+
+export type UserState = {
+  currentUser: User;
+  userFunctions: UserActions;
+};
+
+export type UserActions = {
+  login: (user: User) => void;
+  logout: () => void;
+  signup: (user: User) => void;
 };
 
 export type CartActions = {

@@ -10,56 +10,97 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
+import TabOneScreen from "../screens/HomeScreen";
+import TabTwoScreen from "../screens/InfoScreen";
 import TestingScreen from "../screens/TestingScreen";
-import {
-  BottomTabParamList,
-  Product,
-  State,
-  TabOneParamList,
-  TabTwoParamList,
-} from "../types";
+import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 import ProductDetail from "../screens/ProductDetail";
 import ShoppingCart from "../screens/ShoppingCart";
 import { StyleSheet, Text } from "react-native";
-import cartContext from "../context/Cart";
+import { useCart } from "../context/Cart";
+import { useCurrentUser } from "../context/User";
+import LoginScreen from "../screens/LoginScreen";
+import SignupScreen from "../screens/SignupScreen";
+import UserScreen from "../screens/UserScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const { cart } = React.useContext<State>(cartContext);
+  const { cart } = useCart();
+  const { currentUser } = useCurrentUser();
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       tabBarOptions={{ activeTintColor: Colors.colors.red[500] }}
     >
-      <BottomTab.Screen
-        name="Home"
-        component={TabOneNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          title: "Home",
-        }}
-      />
-      <BottomTab.Screen
-        name="Info"
-        component={TabTwoNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-          title: "Info",
-        }}
-      />
-      <BottomTab.Screen
-        name="Cart"
-        component={CartNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <CartIcon color={color} cart={cart} />,
-          title: "Cart",
-        }}
-      />
+      {currentUser.username ? (
+        <>
+          <BottomTab.Screen
+            name="Home"
+            component={TabOneNavigator}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name="home" color={color} />
+              ),
+              title: "Home",
+            }}
+          />
+          <BottomTab.Screen
+            name="Info"
+            component={TabTwoNavigator}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name="book" color={color} />
+              ),
+              title: "Info",
+            }}
+          />
+
+          <BottomTab.Screen
+            name="Cart"
+            component={CartNavigator}
+            options={{
+              tabBarIcon: ({ color }) => <CartIcon color={color} cart={cart} />,
+              title: "Cart",
+            }}
+          />
+          <BottomTab.Screen
+            name="User"
+            component={UserScreen}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name="person" color={color} />
+              ),
+              title: "User",
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <BottomTab.Screen
+            name="Login"
+            options={{
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name="log-in" color={color} />
+              ),
+              title: "Login",
+            }}
+            component={LoginScreen}
+          />
+          <BottomTab.Screen
+            name="SignUp"
+            options={{
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name="create" color={color} />
+              ),
+              title: "Sign up",
+            }}
+            component={SignupScreen}
+          />
+        </>
+      )}
     </BottomTab.Navigator>
   );
 }
@@ -78,7 +119,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 999,
     top: 0,
-    right: 40,
+    right: 20,
     backgroundColor: Colors.colors.red[500],
     borderRadius: 100,
     width: 20,

@@ -8,6 +8,7 @@ import ProductImage from "../components/ProductImage";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import cartContext from "../context/Cart";
+import Colors from "../constants/Colors";
 
 export default function ProductDetail({ route, navigation }: any) {
   const productId = route?.params?.id;
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 40,
+    color: Colors.colors.red[400],
   },
   price: {
     fontSize: 32,
@@ -77,6 +79,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 20,
   },
 });
