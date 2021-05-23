@@ -10,8 +10,8 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import TabOneScreen from "../screens/HomeScreen";
-import TabTwoScreen from "../screens/InfoScreen";
+import HomeScreen from "../screens/HomeScreen";
+import InfoScreen from "../screens/InfoScreen";
 import TestingScreen from "../screens/TestingScreen";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 import ProductDetail from "../screens/ProductDetail";
@@ -24,10 +24,32 @@ import SignupScreen from "../screens/SignupScreen";
 import UserScreen from "../screens/UserScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+interface PossibleIcons {
+  home: string;
+  book: string;
+  cart: string;
+  person: string;
+  "log-in": string;
+  door: string;
+}
+
+type NavigatorArrayContent = {
+  name: keyof BottomTabParamList;
+  component: React.ComponentType;
+  iconName: React.ComponentProps<typeof Ionicons>["name"];
+  auth?: boolean;
+};
+
+const authNavigators: Array<NavigatorArrayContent> = [
+  { name: "Home", component: HomeScreen, iconName: "home", auth: true },
+  { name: "Info", component: InfoScreen, iconName: "book", auth: true },
+  { name: "Cart", component: ShoppingCart, iconName: "cart", auth: true },
+  { name: "User", component: UserScreen, iconName: "person", auth: true },
+  { name: "Login", component: LoginScreen, iconName: "log-in" },
+  { name: "Info", component: SignupScreen, iconName: "create" },
+];
 
 export default function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-  const { cart } = useCart();
   const { currentUser } = useCurrentUser();
 
   return (
@@ -35,77 +57,32 @@ export default function BottomTabNavigator() {
       initialRouteName="Home"
       tabBarOptions={{ activeTintColor: Colors.colors.red[500] }}
     >
-      {currentUser.username ? (
-        <>
-          <BottomTab.Screen
-            name="Home"
-            component={TabOneNavigator}
-            options={{
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name="home" color={color} />
-              ),
-              title: "Home",
-            }}
-          />
-          <BottomTab.Screen
-            name="Info"
-            component={TabTwoNavigator}
-            options={{
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name="book" color={color} />
-              ),
-              title: "Info",
-            }}
-          />
-
-          <BottomTab.Screen
-            name="Cart"
-            component={CartNavigator}
-            options={{
-              tabBarIcon: ({ color }) => <CartIcon color={color} cart={cart} />,
-              title: "Cart",
-            }}
-          />
-          <BottomTab.Screen
-            name="User"
-            component={UserScreen}
-            options={{
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name="person" color={color} />
-              ),
-              title: "User",
-            }}
-          />
-        </>
-      ) : (
-        <>
-          <BottomTab.Screen
-            name="Login"
-            options={{
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name="log-in" color={color} />
-              ),
-              title: "Login",
-            }}
-            component={LoginScreen}
-          />
-          <BottomTab.Screen
-            name="SignUp"
-            options={{
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name="create" color={color} />
-              ),
-              title: "Sign up",
-            }}
-            component={SignupScreen}
-          />
-        </>
+      {authNavigators?.map(
+        ({ name, component, iconName, auth }) =>
+          currentUser?.isLoggedIn === auth && (
+            <BottomTab.Screen
+              key={name}
+              name={name!}
+              component={component!}
+              options={{
+                tabBarIcon: ({ color }) =>
+                  name === "Cart" ? (
+                    <CartIcon color={color} />
+                  ) : (
+                    <TabBarIcon name={iconName} color={color} />
+                  ),
+                title: name,
+              }}
+            />
+          )
       )}
     </BottomTab.Navigator>
   );
 }
 
-function CartIcon({ color, cart }: any) {
+function CartIcon({ color }: any) {
+  const { cart } = useCart();
+
   return (
     <>
       <Text style={styles.text}>{cart?.length}</Text>
@@ -147,7 +124,7 @@ function TabOneNavigator() {
     <TabOneStack.Navigator screenOptions={{ headerShown: false }}>
       <TabOneStack.Screen
         name="Home"
-        component={TabOneScreen}
+        component={HomeScreen}
         options={{ headerTitle: "Tab One Title" }}
       />
       <TabOneStack.Screen name="ProductDetail" component={ProductDetail} />
@@ -161,8 +138,8 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
+        name="InfoScreen"
+        component={InfoScreen}
         options={{ headerTitle: "Tab Two Title" }}
       />
       <TabTwoStack.Screen

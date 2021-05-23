@@ -23,7 +23,7 @@ export type TabOneParamList = {
 };
 
 export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+  InfoScreen: undefined;
   TabTwoTest: undefined;
 };
 
@@ -50,6 +50,7 @@ export type User = {
   email: string;
   address: string;
   password?: never; // Do not store user password
+  isLoggedIn?: boolean;
 };
 
 export type UserState = {

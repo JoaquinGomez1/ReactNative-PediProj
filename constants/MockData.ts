@@ -55,4 +55,5 @@ export const mockUser: User = {
   username: "Joaquin",
   email: "joaquin@email.com",
   address: "Calle viva 123",
+  isLoggedIn: true,
 };
