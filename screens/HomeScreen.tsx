@@ -3,15 +3,14 @@ import { useContext } from "react";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
-import Product from "../components/Product";
 import { Text, View } from "../components/Themed";
 import MyButton from "../components/Button";
 import cartContext from "../context/Cart";
 import { CartState } from "../types";
 import { productList } from "../constants/MockData";
-import GestureRecognizer from "react-native-swipe-gestures";
+import Product from "../components/Product";
 
-export default function TabOneScreen({ navigation }: any) {
+export default function TabOneScreen({ navigation, route }: any) {
   const { cartFunctions } = useContext<CartState>(cartContext);
 
   return (
@@ -29,17 +28,18 @@ export default function TabOneScreen({ navigation }: any) {
           }}
         >
           {productList.map((each) => (
-            <GestureRecognizer
+            <Product
+              navigation={navigation}
+              product={each}
               key={each.id}
               onSwipeRight={() => cartFunctions.addToCart(each)}
+              route={route}
             >
-              <Product navigation={navigation} product={each}>
-                <MyButton
-                  title="Add To Cart"
-                  onPress={() => cartFunctions.addToCart(each)}
-                />
-              </Product>
-            </GestureRecognizer>
+              <MyButton
+                title="Add To Cart"
+                onPress={() => cartFunctions.addToCart(each)}
+              />
+            </Product>
           ))}
         </ScrollView>
       </View>

@@ -7,7 +7,7 @@ import { Text } from "./Themed";
 export default function MyButton(props: PropsWithoutRef<any>) {
   return (
     <TouchableOpacity {...props}>
-      <View style={styles.button}>
+      <View style={props.style || styles.button}>
         <Text style={styles.buttonText}>{props.title}</Text>
       </View>
     </TouchableOpacity>

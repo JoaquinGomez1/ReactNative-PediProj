@@ -1,67 +1,114 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import { Product as ProdType } from "../types";
 import ProductImage from "../components/ProductImage";
 import cartContext from "../context/Cart";
-
-interface IProduct {
-  product: ProdType;
-  navigation?: any;
-  route?: any;
-  style?: any;
-  [x: string]: any;
-}
+import Animated, { EasingNode } from "react-native-reanimated";
+import GestureRecognizer from "react-native-swipe-gestures";
 
 type ProductProps = {
   product: ProdType;
   navigation?: any;
   route?: any;
   style?: any;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
   [x: string]: any;
 };
 
 export default function Product(props: ProductProps) {
   const { product, navigation } = props;
-  const { cartFunctions } = useContext(cartContext);
+
   const handleNavigation = () => {
-    navigation.push("ProductDetail", {
-      id: product.id || 111,
-      product,
-    });
+    if (props.route.name !== "Home") {
+      return navigation.navigate("Home", {
+        screen: "ProductDetail",
+        params: { id: product.id, product },
+      });
+    }
+    return navigation.push("ProductDetail");
+  };
+
+  const productAnimationValue = new Animated.Value(0);
+  const height = new Animated.Value(380);
+
+  const animateProduct = () => {
+    Animated.timing(productAnimationValue, {
+      toValue: 400,
+      duration: 280,
+      easing: EasingNode.ease,
+    }).start(() =>
+      Animated.timing(productAnimationValue, {
+        toValue: 0,
+        duration: 180,
+        easing: EasingNode.ease,
+      }).start()
+    );
+  };
+
+  const productAnimationDetails = {
+    transform: [{ translateX: productAnimationValue }],
+  };
+
+  const handleSwipeRight = () => {
+    if (props.onSwipeRight) {
+      animateProduct();
+      props?.onSwipeRight();
+    }
+  };
+
+  const animateProductLeft = () => {
+    Animated.timing(productAnimationValue, {
+      toValue: -400,
+      duration: 280,
+      easing: EasingNode.ease,
+    }).start(() =>
+      Animated.timing(height, {
+        toValue: 0,
+        duration: 100,
+        easing: EasingNode.ease,
+      })
+    );
+  };
+
+  const handleSwipeLeft = () => {
+    if (props.onSwipeLeft) {
+      animateProductLeft();
+      props?.onSwipeLeft();
+    }
   };
 
   return (
-    <View {...props} style={styles.container}>
-      <TouchableOpacity onPress={handleNavigation}>
-        <ProductImage source={{ uri: product?.img }} />
+    <GestureRecognizer
+      onSwipeRight={handleSwipeRight}
+      onSwipeLeft={handleSwipeLeft}
+    >
+      <Animated.View
+        {...props}
+        style={[styles.container, productAnimationDetails]}
+      >
+        <TouchableOpacity onPress={handleNavigation}>
+          <ProductImage source={{ uri: product?.img }} />
 
-        <View style={styles.titleContainer}>
-          <TouchableOpacity>
-            <Text style={styles.title}>{product?.title || "Product"}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.description} numberOfLines={1}>
-            {product?.description ||
-              "lorem ipsum sit sadasdhaskdjashdk jashdjkashdakjs asjhdasjkdhaskjdhaks  "}
-          </Text>
-          <Text style={styles.price}>${product?.price || "$360.00"}.00</Text>
-        </View>
-      </TouchableOpacity>
-      <View>{props.children}</View>
-    </View>
+          <View style={styles.titleContainer}>
+            <TouchableOpacity>
+              <Text style={styles.title}>{product?.title || "Product"}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.description} numberOfLines={1}>
+              {product?.description ||
+                "lorem ipsum sit sadasdhaskdjashdk jashdjkashdakjs asjhdasjkdhaskjdhaks  "}
+            </Text>
+            <Text style={styles.price}>${product?.price || "$360.00"}.00</Text>
+          </View>
+        </TouchableOpacity>
+        <View>{props.children}</View>
+      </Animated.View>
+    </GestureRecognizer>
   );
-}
-
-function convertToPrice(price: number): string {
-  // Intl does not work on android using expo.
-  // Using intl package instead
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
 }
 
 const styles = StyleSheet.create({

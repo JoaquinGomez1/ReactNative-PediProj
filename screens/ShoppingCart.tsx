@@ -6,10 +6,9 @@ import ProductComponent from "../components/Product";
 import { useCart } from "../context/Cart";
 import { Product } from "../types";
 import MyButton from "../components/Button";
-import GestureRecognizer from "react-native-swipe-gestures";
 import Colors from "../constants/Colors";
 
-export default function ShoppingCart({ navigation }: any) {
+export default function ShoppingCart({ navigation, route }: any) {
   const { cart, cartFunctions } = useCart();
 
   return (
@@ -22,16 +21,13 @@ export default function ShoppingCart({ navigation }: any) {
       >
         {cart?.length >= 1 &&
           cart?.map((product: Product, i: number) => (
-            <GestureRecognizer
-              key={product?.id + i}
+            <ProductComponent
               onSwipeLeft={() => cartFunctions.deleteFromCart(product.id)}
-            >
-              <ProductComponent
-                style={styles.card}
-                navigation={navigation}
-                product={product}
-              ></ProductComponent>
-            </GestureRecognizer>
+              style={styles.card}
+              navigation={navigation}
+              product={product}
+              route={route}
+            ></ProductComponent>
           ))}
       </ScrollView>
       <View

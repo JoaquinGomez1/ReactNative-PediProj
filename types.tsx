@@ -15,6 +15,7 @@ export type BottomTabParamList = {
   Login: undefined;
   SignUp: undefined;
   User: undefined;
+  Loading: undefined;
 };
 
 export type TabOneParamList = {
@@ -45,7 +46,7 @@ export type CartState = {
 };
 
 export type User = {
-  id: number | string;
+  id?: number | string;
   username: string;
   email: string;
   address: string;
@@ -59,9 +60,11 @@ export type UserState = {
 };
 
 export type UserActions = {
-  login: (user: User) => void;
+  login: (email: string, password: string) => void;
+  loginWithFirebase: () => void;
   logout: () => void;
-  signup: (user: User) => void;
+  signup: (user: User, password: string) => void;
+  getCurrentSignedInUser: () => Object | null | undefined;
 };
 
 export type CartActions = {

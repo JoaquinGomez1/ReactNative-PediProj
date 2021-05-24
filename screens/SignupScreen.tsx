@@ -7,9 +7,16 @@ import { TextInput } from "react-native-gesture-handler";
 import MyButton from "../components/Button";
 import { useCurrentUser } from "../context/User";
 import { mockUser } from "../constants/MockData";
+import { User } from "../types";
 
 export default function SignupScreen({ navigation }: any) {
   const { userFunctions } = useCurrentUser();
+  const [password, setPassword] = React.useState("");
+  const [currentUserData, setCurrentUserData] = React.useState<User>({
+    username: "",
+    email: "",
+    address: "",
+  });
 
   return (
     <View style={styles.container}>
@@ -22,20 +29,35 @@ export default function SignupScreen({ navigation }: any) {
       <View style={{ width: "100%", paddingHorizontal: 20 }}>
         <TextInput
           style={styles.input}
-          placeholder="username"
-          onChangeText={() => alert("hi")}
+          placeholder="Username"
+          onChangeText={(text) =>
+            setCurrentUserData({ ...currentUserData, username: text })
+          }
         />
-        <TextInput style={styles.input} placeholder="email" />
-        <TextInput style={styles.input} placeholder="address" />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          onChangeText={(text) =>
+            setCurrentUserData({ ...currentUserData, email: text })
+          }
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Address"
+          onChangeText={(text) =>
+            setCurrentUserData({ ...currentUserData, address: text })
+          }
+        />
         <TextInput
           style={styles.input}
           autoCompleteType="password"
-          placeholder="password"
+          placeholder="Password"
           secureTextEntry={true}
+          onChangeText={(text) => setPassword(text)}
         />
         <MyButton
           title="Sign Up"
-          onPress={() => userFunctions.login(mockUser)}
+          onPress={() => userFunctions.signup(currentUserData, password)}
         />
       </View>
     </View>

@@ -9,7 +9,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
 import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
 import HomeScreen from "../screens/HomeScreen";
 import InfoScreen from "../screens/InfoScreen";
 import TestingScreen from "../screens/TestingScreen";
@@ -22,16 +21,10 @@ import { useCurrentUser } from "../context/User";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import UserScreen from "../screens/UserScreen";
+import firebaseApp from "../config.firebase";
+import LoadingScreen from "../screens/LoadingScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
-interface PossibleIcons {
-  home: string;
-  book: string;
-  cart: string;
-  person: string;
-  "log-in": string;
-  door: string;
-}
 
 type NavigatorArrayContent = {
   name: keyof BottomTabParamList;
@@ -41,40 +34,65 @@ type NavigatorArrayContent = {
 };
 
 const authNavigators: Array<NavigatorArrayContent> = [
-  { name: "Home", component: HomeScreen, iconName: "home", auth: true },
-  { name: "Info", component: InfoScreen, iconName: "book", auth: true },
-  { name: "Cart", component: ShoppingCart, iconName: "cart", auth: true },
+  { name: "Home", component: TabOneNavigator, iconName: "home", auth: true },
+  { name: "Info", component: TabTwoNavigator, iconName: "book", auth: true },
+  { name: "Cart", component: CartNavigator, iconName: "cart", auth: true },
   { name: "User", component: UserScreen, iconName: "person", auth: true },
-  { name: "Login", component: LoginScreen, iconName: "log-in" },
-  { name: "Info", component: SignupScreen, iconName: "create" },
+  { name: "Login", component: LoginScreen, iconName: "log-in", auth: false },
+  { name: "SignUp", component: SignupScreen, iconName: "create", auth: false },
 ];
 
 export default function BottomTabNavigator() {
-  const { currentUser } = useCurrentUser();
+  // const { currentUser } = useCurrentUser();
+  const [authUser, setAuthUser] = React.useState<any>();
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const googleUser = firebaseApp.auth().currentUser;
+    setAuthUser(googleUser);
+    if (googleUser) {
+      setIsLoggedIn(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  firebaseApp.auth().onAuthStateChanged((user) => {
+    if (user) setIsLoggedIn(true);
+    else setIsLoggedIn(false);
+  });
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       tabBarOptions={{ activeTintColor: Colors.colors.red[500] }}
     >
-      {authNavigators?.map(
-        ({ name, component, iconName, auth }) =>
-          currentUser?.isLoggedIn === auth && (
-            <BottomTab.Screen
-              key={name}
-              name={name!}
-              component={component!}
-              options={{
-                tabBarIcon: ({ color }) =>
-                  name === "Cart" ? (
-                    <CartIcon color={color} />
-                  ) : (
-                    <TabBarIcon name={iconName} color={color} />
-                  ),
-                title: name,
-              }}
-            />
-          )
+      {isLoading ? (
+        <BottomTab.Screen
+          key={"loadingscreen"}
+          name="Loading"
+          component={LoadingScreen}
+        />
+      ) : (
+        authNavigators?.map(
+          ({ name, component, iconName, auth }) =>
+            isLoggedIn === auth && (
+              <BottomTab.Screen
+                key={name}
+                name={name!}
+                component={component!}
+                options={{
+                  tabBarIcon: ({ color }) =>
+                    name === "Cart" ? (
+                      <CartIcon color={color} />
+                    ) : (
+                      <TabBarIcon name={iconName} color={color} />
+                    ),
+                  title: name,
+                }}
+              />
+            )
+        )
       )}
     </BottomTab.Navigator>
   );

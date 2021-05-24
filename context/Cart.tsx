@@ -8,12 +8,9 @@ export function CartProvider(props: any) {
   const cartFunctions = useMemo<CartActions>(
     () => ({
       addToCart: (product) => {
-        // alert(JSON.stringify(cart, null, 4));
         const itemIndex = cart.findIndex((each) => each.id === product.id);
-        const itemExists = itemIndex !== -1;
-        setCart((prevCart) =>
-          itemExists ? [...prevCart] : [...prevCart, product]
-        );
+        const itemDoesNotExists = itemIndex === -1;
+        itemDoesNotExists && setCart((prevCart) => [...prevCart, product]);
       },
       deleteFromCart: (id) => {
         setCart((prevCart: Product[]) => [

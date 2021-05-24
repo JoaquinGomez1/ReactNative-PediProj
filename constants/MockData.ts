@@ -17,7 +17,7 @@ export const productList: Product[] = [
       "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
     title: "Hamburguesa",
     id: 12,
-    units: 10,
+    units: 4,
     price: 170,
   },
   {
@@ -35,7 +35,7 @@ export const productList: Product[] = [
       "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
     title: "Pizza",
     id: 14,
-    units: 10,
+    units: 19,
     price: 120,
   },
   {
@@ -44,7 +44,7 @@ export const productList: Product[] = [
       "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
     title: "Cerveza",
     id: 15,
-    units: 10,
+    units: 1000,
     price: 90,
   },
   mockProduct,
