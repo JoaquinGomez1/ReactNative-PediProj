@@ -8,7 +8,6 @@ import MyButton from "../components/Button";
 
 export default function UserScreen({ navigation }: any) {
   const { currentUser, userFunctions } = useCurrentUser();
-  const googleUser = userFunctions.getCurrentSignedInUser();
 
   // TODO: Figure out a way to combine google user and current user so that there is only one possible user
 
@@ -20,9 +19,8 @@ export default function UserScreen({ navigation }: any) {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text>{currentUser.username || googleUser?.email}</Text>
-      <Text>{currentUser.email}</Text>
-      <Text>{currentUser.address}</Text>
+      <Text>{currentUser?.email}</Text>
+      <Text>{currentUser?.address}</Text>
 
       <View style={{ width: "100%", paddingHorizontal: 20 }}>
         <MyButton

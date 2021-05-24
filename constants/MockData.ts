@@ -14,11 +14,11 @@ export const productList: Product[] = [
   {
     img: "https://img.interempresas.net/fotos/1622791.jpeg",
     description:
-      "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
+      "Hamburguesa con cebolla, tomate, lechuga y queso cheddar derretido \ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
     title: "Hamburguesa",
     id: 12,
     units: 4,
-    price: 170,
+    price: 370,
   },
   {
     img: "https://el-periodico.com.ar/download/multimedia.normal.9e80f8bf087e2bd0.696e646976696475616c2d6265746f732d6c6f6d6f5f6e6f726d616c2e706e67.png",

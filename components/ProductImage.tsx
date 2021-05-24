@@ -8,7 +8,7 @@ export default function MyImage(props: PropsWithoutRef<any>) {
 const styles = StyleSheet.create({
   image: {
     width: "100%",
-    height: 180,
+    height: 150,
     resizeMode: "contain",
   },
 });

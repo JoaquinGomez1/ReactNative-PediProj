@@ -3,6 +3,8 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import { Dispatch } from "react";
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -45,18 +47,19 @@ export type CartState = {
   cartFunctions: CartActions;
 };
 
-export type User = {
+export interface User {
   id?: number | string;
   username: string;
   email: string;
   address: string;
   password?: never; // Do not store user password
   isLoggedIn?: boolean;
-};
+}
 
 export type UserState = {
-  currentUser: User;
+  currentUser: User | firebase.default.User | undefined;
   userFunctions: UserActions;
+  setCurrentUser: Dispatch<User | firebase.default.User | {}>;
 };
 
 export type UserActions = {

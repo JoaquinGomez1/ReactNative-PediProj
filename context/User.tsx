@@ -46,7 +46,10 @@ export function UserProvider(props: any) {
   );
 
   return (
-    <UserContext.Provider {...props} value={{ currentUser, userFunctions }}>
+    <UserContext.Provider
+      {...props}
+      value={{ currentUser, userFunctions, setCurrentUser }}
+    >
       {props.children}
     </UserContext.Provider>
   );

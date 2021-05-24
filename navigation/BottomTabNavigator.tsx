@@ -43,23 +43,22 @@ const authNavigators: Array<NavigatorArrayContent> = [
 ];
 
 export default function BottomTabNavigator() {
-  // const { currentUser } = useCurrentUser();
-  const [authUser, setAuthUser] = React.useState<any>();
+  const { setCurrentUser } = useCurrentUser();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    const googleUser = firebaseApp.auth().currentUser;
-    setAuthUser(googleUser);
-    if (googleUser) {
+  // React.useEffect(() => {
+  //   setIsLoading(false);
+  //   console.log("render effect");
+  // }, []);
+
+  firebaseApp.auth().onIdTokenChanged((user) => {
+    if (user !== null) {
+      setCurrentUser(user);
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-    setIsLoading(false);
-  }, []);
-
-  firebaseApp.auth().onAuthStateChanged((user) => {
-    if (user) setIsLoggedIn(true);
-    else setIsLoggedIn(false);
   });
 
   return (
@@ -145,7 +144,11 @@ function TabOneNavigator() {
         component={HomeScreen}
         options={{ headerTitle: "Tab One Title" }}
       />
-      <TabOneStack.Screen name="ProductDetail" component={ProductDetail} />
+      <TabOneStack.Screen
+        name="ProductDetail"
+        component={ProductDetail}
+        options={{ headerShown: true, headerTitle: "Producto" }}
+      />
     </TabOneStack.Navigator>
   );
 }

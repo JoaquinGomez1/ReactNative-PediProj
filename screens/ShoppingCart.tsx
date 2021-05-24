@@ -13,7 +13,7 @@ export default function ShoppingCart({ navigation, route }: any) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{cart?.length} Item/s in cart</Text>
+      <Text style={styles.title}>{cart?.length} productos en la cesta</Text>
       <ScrollView
         contentContainerStyle={{
           alignItems: "center",
@@ -39,7 +39,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         }}
       >
         <MyButton
-          title="Clear cart"
+          title="Limpiar cesta"
           onPress={() => cartFunctions.clearCart()}
         />
       </View>

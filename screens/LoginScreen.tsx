@@ -6,7 +6,6 @@ import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
 import MyButton from "../components/Button";
 import { useCurrentUser } from "../context/User";
-import { mockUser } from "../constants/MockData";
 import GoogleAuth from "../components/GoogleAuth";
 
 export default function LoginScreen({ navigation }: any) {

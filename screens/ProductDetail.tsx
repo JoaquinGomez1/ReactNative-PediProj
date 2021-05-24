@@ -10,7 +10,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import cartContext from "../context/Cart";
 import Colors from "../constants/Colors";
 
-export default function ProductDetail({ route, navigation }: any) {
+interface ProductDetailsProps {
+  route: any;
+  navigation: any;
+}
+
+export default function ProductDetail({
+  route,
+  navigation,
+}: React.PropsWithoutRef<ProductDetailsProps>) {
   const productId = route?.params?.id;
   const product: Product = route?.params?.product;
   const { cartFunctions } = useContext(cartContext);
@@ -38,7 +46,7 @@ export default function ProductDetail({ route, navigation }: any) {
       </ScrollView>
 
       <Button
-        title="Add to cart"
+        title="Agregar a carrito"
         onPress={() => cartFunctions.addToCart(product)}
       />
     </View>

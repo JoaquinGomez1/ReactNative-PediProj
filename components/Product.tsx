@@ -28,7 +28,7 @@ export default function Product(props: ProductProps) {
         params: { id: product.id, product },
       });
     }
-    return navigation.push("ProductDetail");
+    return navigation.push("ProductDetail", { id: product.id, product });
   };
 
   const productAnimationValue = new Animated.Value(0);
@@ -54,7 +54,7 @@ export default function Product(props: ProductProps) {
 
   const handleSwipeRight = () => {
     if (props.onSwipeRight) {
-      animateProduct();
+      // animateProduct();
       props?.onSwipeRight();
     }
   };
@@ -75,7 +75,7 @@ export default function Product(props: ProductProps) {
 
   const handleSwipeLeft = () => {
     if (props.onSwipeLeft) {
-      animateProductLeft();
+      // animateProductLeft();
       props?.onSwipeLeft();
     }
   };
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     backgroundColor: "#f3f4f6",
     padding: 12,
-    height: 60,
+    height: 40,
     width: "100%",
   },
   infoContainer: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: "90%",
-    height: 380,
+    height: 330,
     alignItems: "center",
     borderRadius: 6,
     overflow: "hidden",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 180,
+    height: 150,
     resizeMode: "contain",
   },
   description: {
