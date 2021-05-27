@@ -65,6 +65,7 @@ export type Category = {
   id: number | string;
   name: string;
   img?: string;
+  icon?: string;
 };
 
 export type CartState = {

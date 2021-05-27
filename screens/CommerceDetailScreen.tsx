@@ -1,77 +1,48 @@
-import React, { PropsWithoutRef, useEffect, useState } from "react";
+import React, { PropsWithoutRef } from "react";
 import { Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Marker } from "react-native-maps";
-import Loader from "../components/Loader";
 import Map from "../components/MapView";
 import { View, Text } from "../components/Themed";
 import Colors from "../constants/Colors";
-import { categoriesList } from "../constants/MockData";
-import { Category, Commerce } from "../types";
+import useCategories from "../hooks/useCategories";
+import { Commerce } from "../types";
 
 interface CommerceDetailProps {
   route?: any;
 }
 
-type DefaultCategory = {
-  name: string;
-};
-
-function determineCategory(id: string | number): Category | DefaultCategory {
-  const foundCategory = categoriesList.find((each) => each.id === id);
-  if (foundCategory) return foundCategory;
-
-  return { name: "Not found" };
-}
-
 export default function CommerceDetailScreen({
   route,
 }: PropsWithoutRef<CommerceDetailProps>) {
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  const [category, setCategory] = useState<DefaultCategory | Category>({
-    name: "Default",
-  });
   const { params } = route;
   const commerce: Commerce = params?.commerce;
-
-  useEffect(() => {
-    const categoryOfCommerce = determineCategory(commerce.category);
-    setCategory(categoryOfCommerce);
-    setIsPageLoading(false);
-  }, []);
+  const { categorySelected } = useCategories(commerce.category);
 
   return (
     <View style={styles.container}>
-      {isPageLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <Text style={styles.title}>{commerce?.name}</Text>
-          <Image style={styles.image} source={{ uri: commerce?.img }} />
+      <Text style={styles.title}>{commerce?.name}</Text>
+      <Image style={styles.image} source={{ uri: commerce?.img }} />
 
-          <View style={styles.descriptionContainer}>
-            <View style={styles.descriptionRow}>
-              <Text style={styles.descriptionTitle}>Descripción</Text>
-              <Text style={{ fontWeight: "bold" }}>{category?.name}</Text>
-            </View>
-            <View style={styles.separator} />
+      <View style={styles.descriptionContainer}>
+        <View style={styles.descriptionRow}>
+          <Text style={styles.descriptionTitle}>Descripción</Text>
+          <Text style={{ fontWeight: "bold" }}>{categorySelected?.name}</Text>
+        </View>
+        <View style={styles.separator} />
 
-            {/*  Height of the View component below determines the height of the scroll view. Cannot be defined directly on that component */}
-            <View style={styles.descriptionScroll}>
-              <ScrollView>
-                <Text style={styles.descriptionText}>
-                  {commerce?.description}
-                </Text>
-              </ScrollView>
-            </View>
-          </View>
-          <View style={styles.mapContainer}>
-            <Map>
-              <Marker coordinate={commerce.location} />
-            </Map>
-          </View>
-        </>
-      )}
+        {/*  Height of the View component below determines the height of the scroll view. Cannot be defined directly on that component */}
+        <View style={styles.descriptionScroll}>
+          <ScrollView>
+            <Text style={styles.descriptionText}>{commerce?.description}</Text>
+          </ScrollView>
+        </View>
+      </View>
+      <View style={styles.mapContainer}>
+        <Map>
+          <Marker coordinate={commerce.location} />
+        </Map>
+      </View>
     </View>
   );
 }

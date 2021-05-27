@@ -1,12 +1,15 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as React from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import Badge from "../components/Badge";
 
 import Category from "../components/Category";
 import SearchBar from "../components/SearchBar";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { commerceList as mockData } from "../constants/MockData";
+import useCategories from "../hooks/useCategories";
 import { Commerce } from "../types";
 
 type CategoriesNavigationProps = StackNavigationProp<any, any>;
@@ -18,16 +21,36 @@ interface CommerceDetailScreen {
 export default function CommerceListScreen({
   navigation,
 }: React.PropsWithRef<CommerceDetailScreen>) {
-  const [commerceList, setCommerceList] = React.useState(mockData);
+  const [commerceList, setCommerceList] =
+    React.useState<Commerce[] | []>(mockData);
+  const { categories } = useCategories();
+
+  React.useEffect(() => {
+    setCommerceList(mockData);
+  }, [navigation]);
 
   const handleTextChanged = (text: string) => {
     const regex = new RegExp(text, "gi");
     const filteredList = mockData.filter((each) => regex.test(each.name));
-    setCommerceList(filteredList);
+
+    const encontradoEnLocal = filteredList.length >= 1;
+    if (encontradoEnLocal) setCommerceList(filteredList);
+    else {
+      const resultHttp: [] = [];
+      setCommerceList(resultHttp);
+    } // Buscar en base de datos
   };
 
-  const handleNavigation = (commerce: Commerce) => {
+  const handleNavigation = (commerce: Commerce | undefined) => {
     navigation.push("CommerceDetailScreen", { commerce });
+  };
+
+  const handleBadgePress = (id: string | number) => {
+    //  TODO: Make this work with http requests aswell
+    const filteredCommerces = commerceList.filter(
+      (each) => each.category === id
+    );
+    setCommerceList(filteredCommerces);
   };
 
   return (
@@ -36,8 +59,22 @@ export default function CommerceListScreen({
         <Text style={styles.title}>Ver nuestros locales adheridos</Text>
         <SearchBar
           onChangeText={handleTextChanged}
-          placeholder="Buscar un local"
+          placeholder="Buscar en locales"
         />
+
+        <View style={{ height: 40, marginTop: 8 }}>
+          <ScrollView horizontal={true}>
+            {categories.map((eachCategory) => (
+              <Badge
+                onPress={() => handleBadgePress(eachCategory.id)}
+                style={{ marginHorizontal: 8 }}
+                key={eachCategory.id}
+                text={eachCategory.name}
+                iconName={eachCategory.icon}
+              />
+            ))}
+          </ScrollView>
+        </View>
       </View>
       <View
         style={styles.separator}
@@ -65,7 +102,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 60,
+    paddingVertical: 100,
     flex: 1,
   },
   header: {
@@ -80,7 +117,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   separator: {
-    marginTop: 30,
+    marginTop: 15,
     height: 1,
     width: "100%",
   },

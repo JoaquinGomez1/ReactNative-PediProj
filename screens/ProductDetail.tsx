@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import cartContext from "../context/Cart";
 import Colors from "../constants/Colors";
+import useCommerces from "../hooks/useCommerce";
 
 interface ProductDetailsProps {
   route: any;
@@ -22,6 +23,7 @@ export default function ProductDetail({
   const productId = route?.params?.id;
   const product: Product = route?.params?.product;
   const { cartFunctions } = useContext(cartContext);
+  const { commerceSelected } = useCommerces(product?.commerce);
 
   if (!productId || !Object.keys(product))
     navigation.navigate("Home", { screen: "Home" });
@@ -29,6 +31,7 @@ export default function ProductDetail({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{product.title}</Text>
+
       <ProductImage source={{ uri: product?.img }} />
 
       <View style={styles.priceArea}>
@@ -36,14 +39,18 @@ export default function ProductDetail({
         <Text>{product.units} unidades</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-        <Text style={styles.descriptionTitle}>Descripción:</Text>
-        <View style={styles.separator} />
+      <View style={{ maxHeight: 150 }}>
+        <Text> Comercio: {commerceSelected?.name}</Text>
 
-        <View style={styles.descriptionArea}>
-          <Text>{product.description}</Text>
-        </View>
-      </ScrollView>
+        <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+          <Text style={styles.descriptionTitle}>Descripción:</Text>
+          <View style={styles.separator} />
+
+          <View style={styles.descriptionArea}>
+            <Text>{product.description}</Text>
+          </View>
+        </ScrollView>
+      </View>
 
       <Button
         title="Agregar a carrito"

@@ -1,4 +1,3 @@
-import { Dimensions } from "react-native";
 import { Category, Commerce, Product, User } from "../types";
 
 export const mockProduct = {
@@ -67,14 +66,6 @@ export const mockUser: User = {
   isLoggedIn: true,
 };
 
-function getLongitudDelta() {
-  const window = Dimensions.get("window");
-  const { width } = window;
-  const LATITUD_DELTA = 0.0922;
-
-  return LATITUD_DELTA + (width - 40) / 230;
-}
-
 export const commerceList: Commerce[] = [
   {
     id: 1,
@@ -142,20 +133,37 @@ export const categoriesList: Category[] = [
   {
     id: 1,
     name: "Comida rapida",
+    icon: "hamburger",
   },
   {
     id: 2,
     name: "Bar",
+    icon: "beer",
   },
   {
     id: 3,
     name: "Restaurant",
+    icon: "utensils",
   },
 ];
 
-export const InitialRegion = {
-  longitude: -64.18387,
-  latitude: -31.389415,
-  latitudeDelta: 0.0922,
-  longitudeDelta: getLongitudDelta(),
+export const defaultDeltas = {
+  // These delta properties define how the 'zoom' works on the map
+  latitudeDelta: 0.0143,
+  longitudeDelta: 0.0134,
 };
+
+export const InitialRegion = {
+  latitude: -31.389415,
+  longitude: -64.18387,
+  ...defaultDeltas,
+};
+
+// !Deprecated
+// function getLongitudDelta() {
+//   const window = Dimensions.get("window");
+//   const { width } = window;
+//   const LATITUD_DELTA = 0.0922;
+
+//   return LATITUD_DELTA + width / 230;
+// }

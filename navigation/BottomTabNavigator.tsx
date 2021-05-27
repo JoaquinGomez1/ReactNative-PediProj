@@ -156,19 +156,14 @@ function CategoriesNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="CategoriesScreen"
-        component={InfoScreen}
-        options={{ headerTitle: "Ver categorias", headerShown: true }}
-      />
-      <TabTwoStack.Screen
         name="CommercesScreen"
         component={CommerceScreen}
-        options={{ title: "Locales adheridos" }}
+        options={{ headerShown: false }}
       />
       <TabTwoStack.Screen
         name="CommerceDetailScreen"
         component={CommerceDetailScreen}
-        options={{ title: "Locales adheridos" }}
+        options={{ title: "Ver local" }}
       />
     </TabTwoStack.Navigator>
   );

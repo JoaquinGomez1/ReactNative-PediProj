@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
@@ -118,5 +118,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 5,
   },
-  notFound: { color: Colors.colors.pink[500], fontSize: 25 },
+  notFound: {
+    color: Colors.colors.red[500],
+    fontSize: 25,
+    textAlign: "center",
+  },
 });
