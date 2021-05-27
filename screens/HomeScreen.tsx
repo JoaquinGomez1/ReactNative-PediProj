@@ -19,12 +19,8 @@ export default function TabOneScreen({ navigation, route }: any) {
   const [productList, setProductList] = useState(mockList);
 
   const handleSearchTextChange = (text: string) => {
-    if (!text) {
-      setProductList(mockList);
-      return;
-    }
     const regex = new RegExp(text, "gi");
-    const filteredList = productList.filter((each) => regex.test(each.title));
+    const filteredList = mockList.filter((each) => regex.test(each.title));
     setProductList(filteredList);
   };
 
@@ -57,22 +53,27 @@ export default function TabOneScreen({ navigation, route }: any) {
           contentContainerStyle={{
             flexGrow: 1,
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {productList.map((each) => (
-            <Product
-              navigation={navigation}
-              product={each}
-              key={each.id}
-              onSwipeRight={() => cartFunctions.addToCart(each)}
-              route={route}
-            >
-              <MyButton
-                title="Agregar a carrito"
-                onPress={() => cartFunctions.addToCart(each)}
-              />
-            </Product>
-          ))}
+          {productList?.length <= 0 ? (
+            <Text style={styles.notFound}>No se encontraron productos</Text>
+          ) : (
+            productList.map((each) => (
+              <Product
+                navigation={navigation}
+                product={each}
+                key={`${each.id}`}
+                onSwipeRight={() => cartFunctions.addToCart(each)}
+                route={route}
+              >
+                <MyButton
+                  title="Agregar a carrito"
+                  onPress={() => cartFunctions.addToCart(each)}
+                />
+              </Product>
+            ))
+          )}
         </ScrollView>
       </View>
     </View>
@@ -117,4 +118,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 5,
   },
+  notFound: { color: Colors.colors.pink[500], fontSize: 25 },
 });

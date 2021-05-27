@@ -17,9 +17,9 @@ export default function ShoppingCart({ navigation, route }: any) {
       <FlatList
         contentContainerStyle={{ width: "100%", justifyContent: "center" }}
         data={cart}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ProductComponent
-            key={`${item.id}`}
             onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
             style={styles.card}
             navigation={navigation}

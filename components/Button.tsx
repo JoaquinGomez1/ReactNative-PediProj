@@ -1,20 +1,39 @@
 import React from "react";
 import { PropsWithoutRef } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import Colors from "../constants/Colors";
 import { Text } from "./Themed";
 
-export default function MyButton(props: PropsWithoutRef<any>) {
+interface MyButtonProps {
+  style?: StyleProp<ViewStyle>;
+  title: string;
+  onPress: () => void;
+}
+
+export default function MyButton({
+  style,
+  title,
+  ...rest
+}: PropsWithoutRef<MyButtonProps>) {
   return (
-    <TouchableOpacity {...props}>
-      <View style={props.style || styles.button}>
-        <Text style={styles.buttonText}>{props.title}</Text>
+    <TouchableOpacity style={styles.container} {...rest}>
+      <View style={style || styles.button}>
+        <Text style={styles.buttonText}>{title}</Text>
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+  },
   button: {
     width: "100%",
     textAlign: "center",

@@ -15,7 +15,7 @@ export default function TabTwoScreen({ navigation }: any) {
         darkColor="rgba(255,255,255,0.1)"
       />
       <View style={styles.main}>
-        <TouchableOpacity onPress={() => navigation.push("TabTwoTest")}>
+        <TouchableOpacity onPress={() => navigation.push("CommercesScreen")}>
           <Text style={styles.testLink}>Go Test</Text>
         </TouchableOpacity>
       </View>

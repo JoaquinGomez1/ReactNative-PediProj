@@ -66,17 +66,13 @@ export default function Product(props: ProductProps) {
   };
 
   const handleSwipeRight = () => {
-    if (props.onSwipeRight) {
-      animateProductRight();
-      props?.onSwipeRight();
-    }
+    animateProductRight();
+    props.onSwipeRight && props?.onSwipeRight();
   };
 
   const handleSwipeLeft = () => {
-    if (props.onSwipeLeft) {
-      // animateProductLeft();
-      props?.onSwipeLeft();
-    }
+    animateProductLeft();
+    props.onSwipeLeft && props?.onSwipeLeft();
   };
 
   return (

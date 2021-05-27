@@ -5,8 +5,8 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import HomeScreen from "../screens/HomeScreen";
-import InfoScreen from "../screens/InfoScreen";
-import TestingScreen from "../screens/TestingScreen";
+import InfoScreen from "../screens/CategoriesScreen";
+import CommerceScreen from "../screens/CommerceListScreen";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 import ProductDetail from "../screens/ProductDetail";
 import ShoppingCart from "../screens/ShoppingCart";
@@ -18,6 +18,7 @@ import SignupScreen from "../screens/SignupScreen";
 import UserScreen from "../screens/UserScreen";
 import firebaseApp from "../config.firebase";
 import LoadingScreen from "../screens/LoadingScreen";
+import CommerceDetailScreen from "../screens/CommerceDetailScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -29,10 +30,10 @@ type NavigatorArrayContent = {
 };
 
 const authNavigators: Array<NavigatorArrayContent> = [
-  { name: "Home", component: TabOneNavigator, iconName: "home", auth: true },
+  { name: "Home", component: HomeNavigator, iconName: "home", auth: true },
   {
     name: "Categories",
-    component: TabTwoNavigator,
+    component: CategoriesNavigator,
     iconName: "folder-open",
     auth: true,
   },
@@ -121,7 +122,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof Ionicons>["name"];
@@ -130,11 +130,10 @@ function TabBarIcon(props: {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
-// Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
-function TabOneNavigator() {
+function HomeNavigator() {
   return (
     <TabOneStack.Navigator screenOptions={{ headerShown: false }}>
       <TabOneStack.Screen
@@ -153,18 +152,23 @@ function TabOneNavigator() {
 
 const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
-function TabTwoNavigator() {
+function CategoriesNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="InfoScreen"
+        name="CategoriesScreen"
         component={InfoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
+        options={{ headerTitle: "Ver categorias", headerShown: true }}
       />
       <TabTwoStack.Screen
-        name="TabTwoTest"
-        component={TestingScreen}
-        options={{ title: " My little poli" }}
+        name="CommercesScreen"
+        component={CommerceScreen}
+        options={{ title: "Locales adheridos" }}
+      />
+      <TabTwoStack.Screen
+        name="CommerceDetailScreen"
+        component={CommerceDetailScreen}
+        options={{ title: "Locales adheridos" }}
       />
     </TabTwoStack.Navigator>
   );

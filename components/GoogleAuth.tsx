@@ -59,7 +59,6 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
         padding: 3,
         backgroundColor: Colors.colors.blue[400],
         alignItems: "center",
-        color: "white",
         borderRadius: 8,
       }}
       title="Login con google"

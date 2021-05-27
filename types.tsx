@@ -4,6 +4,7 @@
  */
 
 import { Dispatch } from "react";
+import { LatLng, Region } from "react-native-maps";
 
 export type RootStackParamList = {
   Root: undefined;
@@ -26,12 +27,13 @@ export type TabOneParamList = {
 };
 
 export type TabTwoParamList = {
-  InfoScreen: undefined;
-  TabTwoTest: undefined;
+  CategoriesScreen: undefined;
+  CommercesScreen: undefined;
+  CommerceDetailScreen: undefined;
 };
 
 export type Product = {
-  id: number;
+  id: number | string;
   title: string;
   description?: string;
   img: string;
@@ -39,7 +41,30 @@ export type Product = {
   price: number;
   available?: boolean;
   createdDate?: Date;
-  collection?: number;
+  commerce: Commerce["id"];
+};
+
+export type Location = {
+  longitude: number;
+  latitude: number;
+  longitudeDelta?: number;
+  latitudeDelta?: number;
+};
+
+export type Commerce = {
+  id: number | string;
+  name: string;
+  img: string;
+  location: LatLng;
+  owner?: User;
+  category: Category["id"];
+  description: string;
+};
+
+export type Category = {
+  id: number | string;
+  name: string;
+  img?: string;
 };
 
 export type CartState = {
