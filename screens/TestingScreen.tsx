@@ -12,7 +12,7 @@ export default function TabTwoScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
       <View>
-        <Text>Hello this is a test</Text>
+        <Text>Pantalla de prueba</Text>
       </View>
     </View>
   );

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { PropsWithoutRef } from "react";
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import { View } from "./Themed";
@@ -13,7 +13,7 @@ interface SearchBarProps {
 export default function SearchBar(props: PropsWithoutRef<SearchBarProps>) {
   return (
     <View style={styles.barContainer}>
-      <View style={{ paddingHorizontal: 15, overflow: "scroll" }}>
+      <View style={{ paddingHorizontal: 15 }}>
         <Ionicons name="search" size={24} />
       </View>
       <TextInput

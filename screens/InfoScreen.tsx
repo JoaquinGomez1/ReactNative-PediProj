@@ -8,15 +8,17 @@ import { Text, View } from "../components/Themed";
 export default function TabTwoScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>Categorias</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <TouchableOpacity onPress={() => navigation.push("TabTwoTest")}>
-        <Text style={styles.testLink}>Go Test</Text>
-      </TouchableOpacity>
+      <View style={styles.main}>
+        <TouchableOpacity onPress={() => navigation.push("TabTwoTest")}>
+          <Text style={styles.testLink}>Go Test</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -28,13 +30,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
+    color: Colors.colors.red[400],
+    marginVertical: 20,
   },
   separator: {
-    marginVertical: 30,
+    marginBottom: 30,
     height: 1,
     width: "80%",
+  },
+  main: {
+    flex: 1,
   },
   testLink: {
     color: Colors.colors.blue[400],

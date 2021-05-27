@@ -1,15 +1,13 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-
 import { Text, View } from "../components/Themed";
 import { useCurrentUser } from "../context/User";
 import MyButton from "../components/Button";
+import CurrentUserAvatar from "../components/CurrentUserAvatar";
 
 export default function UserScreen({ navigation }: any) {
   const { currentUser, userFunctions } = useCurrentUser();
-
-  // TODO: Figure out a way to combine google user and current user so that there is only one possible user
 
   return (
     <View style={styles.container}>
@@ -19,19 +17,23 @@ export default function UserScreen({ navigation }: any) {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text>{currentUser?.email}</Text>
-      <Text>{currentUser?.address}</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.infoContainer}>
+          <CurrentUserAvatar />
+          <Text>{currentUser?.email}</Text>
+        </View>
 
-      <View style={{ width: "100%", paddingHorizontal: 20 }}>
-        <MyButton
-          title="Get current user"
-          onPress={() =>
-            alert(
-              JSON.stringify(userFunctions.getCurrentSignedInUser(), null, 4)
-            )
-          }
-        />
-        <MyButton title="Log out" onPress={() => userFunctions.logout()} />
+        <View style={{ width: "100%", paddingHorizontal: 20 }}>
+          <MyButton
+            title="Get current user"
+            onPress={() =>
+              alert(
+                JSON.stringify(userFunctions.getCurrentSignedInUser(), null, 4)
+              )
+            }
+          />
+          <MyButton title="Log out" onPress={() => userFunctions.logout()} />
+        </View>
       </View>
     </View>
   );
@@ -55,5 +57,9 @@ const styles = StyleSheet.create({
   testLink: {
     color: Colors.colors.blue[400],
     fontSize: 18,
+  },
+  infoContainer: {
+    width: "100%",
+    alignItems: "center",
   },
 });

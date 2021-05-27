@@ -50,6 +50,9 @@ export const productList: Product[] = [
   mockProduct,
 ];
 
+export const DEFAULT_USER_IMAGE =
+  "https://www.iconninja.com/files/111/870/406/user-people-profile-human-account-avatar-icon.png";
+
 export const mockUser: User = {
   id: 1,
   username: "Joaquin",

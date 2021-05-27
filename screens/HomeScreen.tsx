@@ -11,9 +11,7 @@ import { productList as mockList } from "../constants/MockData";
 import Product from "../components/Product";
 import SearchBar from "../components/SearchBar";
 import UserContext from "../context/User";
-
-const DEFAULT_USER_IMAGE =
-  "https://www.iconninja.com/files/111/870/406/user-people-profile-human-account-avatar-icon.png";
+import CurrentUserAvatar from "../components/CurrentUserAvatar";
 
 export default function TabOneScreen({ navigation, route }: any) {
   const { cartFunctions } = useContext<CartState>(cartContext);
@@ -39,15 +37,13 @@ export default function TabOneScreen({ navigation, route }: any) {
       <View style={styles.container}>
         <View style={styles.subheader}>
           <Text style={styles.subheaderText}>Hola. {currentUser?.email}</Text>
-          <Image
-            source={{
-              uri: currentUser?.providerData?.photoURL || DEFAULT_USER_IMAGE,
-            }}
-            style={styles.userImage}
-          />
+          <CurrentUserAvatar />
         </View>
         <View style={{ width: "100%", marginVertical: 20 }}>
-          <SearchBar onChangeText={handleSearchTextChange} />
+          <SearchBar
+            placeholder="Buscar en destacados"
+            onChangeText={handleSearchTextChange}
+          />
         </View>
         <Text style={styles.highlightedProducts}>Productos destacados</Text>
         <View
@@ -115,12 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: "auto",
-  },
-  userImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: Colors.colors.red[400],
   },
   highlightedProducts: {
     fontSize: 20,

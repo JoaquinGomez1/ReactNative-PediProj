@@ -7,6 +7,7 @@ import Colors from "../constants/Colors";
 import { useCurrentUser } from "../context/User";
 // import firebaseApp from "../config.firebase";
 import firebase from "firebase";
+import firebaseApp from "../config.firebase";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -25,39 +26,29 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
   // });
 
   const handleLogin = () => {
-    if (disabled) {
-      alert("Esperando implementación");
-      return;
-    }
+    // if (disabled) {
+    //   alert("Esperando implementación");
+    //   return;
+    // }
     firebase
       .auth()
       .signInWithPopup(provider)
       .then((result) => {
-        var credential = result.credential!;
-
-        // This gives you a Google Access Token. You can use it to access the Google API.
+        // const credential = result.credential!;
+        // This gives you a Google Access Token, can be used to access the Google API.
         // var token = credential.accessToken;
-        // The signed-in user info.
-        var user = result.user;
+        const user = result.user;
         console.log(user);
       })
       .catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
         console.log(error.code, error.message);
       });
 
-    onPressAditional();
+    onPressAditional && onPressAditional();
   };
 
   // React.useEffect(() => {
   //   if (response?.type === "success") {
-  //     const { authentication } = response;
   //     userFunctions?.loginWithFirebase();
   //   }
   // }, [response]);

@@ -22,7 +22,10 @@ export function UserProvider(props: any) {
           // setCurrentUser(googleUser);
           console.log(googleUser);
         } else {
-          console.log("No google user logged in: ", googleUser);
+          console.log(
+            "GOOGLE FIREBASE: No google user logged in: ",
+            googleUser
+          );
           return;
         }
       },
@@ -31,10 +34,7 @@ export function UserProvider(props: any) {
         setCurrentUser({});
       },
       signup: async (user: User, password) => {
-        const userCredentials = firebase
-          .auth()
-          .createUserWithEmailAndPassword(user.email, password);
-        console.log(userCredentials);
+        firebase.auth().createUserWithEmailAndPassword(user.email, password);
         setCurrentUser({ ...user, isLoggedIn: true });
       },
       getCurrentSignedInUser: () => {

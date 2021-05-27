@@ -1,8 +1,3 @@
-/**
- * Learn more about createBottomTabNavigator:
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -35,7 +30,12 @@ type NavigatorArrayContent = {
 
 const authNavigators: Array<NavigatorArrayContent> = [
   { name: "Home", component: TabOneNavigator, iconName: "home", auth: true },
-  { name: "Info", component: TabTwoNavigator, iconName: "book", auth: true },
+  {
+    name: "Categories",
+    component: TabTwoNavigator,
+    iconName: "folder-open",
+    auth: true,
+  },
   { name: "Cart", component: CartNavigator, iconName: "cart", auth: true },
   { name: "User", component: UserScreen, iconName: "person", auth: true },
   { name: "Login", component: LoginScreen, iconName: "log-in", auth: false },
@@ -45,21 +45,19 @@ const authNavigators: Array<NavigatorArrayContent> = [
 export default function BottomTabNavigator() {
   const { setCurrentUser } = useCurrentUser();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading] = React.useState(false);
+  const [authService] = React.useState(firebaseApp.auth());
 
-  // React.useEffect(() => {
-  //   setIsLoading(false);
-  //   console.log("render effect");
-  // }, []);
-
-  firebaseApp.auth().onIdTokenChanged((user) => {
-    if (user !== null) {
-      setCurrentUser(user);
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  });
+  React.useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      if (user !== null) {
+        setCurrentUser(user);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+  }, [authService]);
 
   return (
     <BottomTab.Navigator

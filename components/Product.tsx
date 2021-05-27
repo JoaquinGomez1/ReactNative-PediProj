@@ -4,7 +4,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import { Product as ProdType } from "../types";
 import ProductImage from "../components/ProductImage";
-import cartContext from "../context/Cart";
 import Animated, { EasingNode } from "react-native-reanimated";
 import GestureRecognizer from "react-native-swipe-gestures";
 
@@ -34,7 +33,7 @@ export default function Product(props: ProductProps) {
   const productAnimationValue = new Animated.Value(0);
   const height = new Animated.Value(380);
 
-  const animateProduct = () => {
+  const animateProductRight = () => {
     Animated.timing(productAnimationValue, {
       toValue: 400,
       duration: 280,
@@ -46,17 +45,6 @@ export default function Product(props: ProductProps) {
         easing: EasingNode.ease,
       }).start()
     );
-  };
-
-  const productAnimationDetails = {
-    transform: [{ translateX: productAnimationValue }],
-  };
-
-  const handleSwipeRight = () => {
-    if (props.onSwipeRight) {
-      // animateProduct();
-      props?.onSwipeRight();
-    }
   };
 
   const animateProductLeft = () => {
@@ -71,6 +59,17 @@ export default function Product(props: ProductProps) {
         easing: EasingNode.ease,
       })
     );
+  };
+
+  const productAnimationDetails = {
+    transform: [{ translateX: productAnimationValue }],
+  };
+
+  const handleSwipeRight = () => {
+    if (props.onSwipeRight) {
+      animateProductRight();
+      props?.onSwipeRight();
+    }
   };
 
   const handleSwipeLeft = () => {
