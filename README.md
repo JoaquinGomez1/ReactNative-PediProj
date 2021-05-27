@@ -1,5 +1,5 @@
 # ReactNative-PediProj
-React-Native food delivery mobile app
+Food delivery app built entirely on React native.
 
 To install dependencies use 
 ```bash
@@ -15,4 +15,4 @@ expo start
 
 to start a local development server
 
-Food delivery app built entirely on React native.
+
