@@ -204,12 +204,12 @@ function UserNavigator() {
       />
       <UserStack.Screen
         name="ManageProducts"
-        options={{ headerShown: true, title: "Manage food" }}
+        options={{ headerShown: true, title: "Gestionar Productos" }}
         component={ManageProductsScreen}
       />
       <UserStack.Screen
         name="ManageCommerces"
-        options={{ headerShown: true, title: "Manage commerces" }}
+        options={{ headerShown: true, title: "Gestionar comercios" }}
         component={ManageCommercesScreen}
       />
     </UserStack.Navigator>

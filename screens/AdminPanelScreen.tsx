@@ -4,8 +4,8 @@ import { Text, View } from "../components/Themed";
 import { useCurrentUser } from "../context/User";
 import MyButton from "../components/Button";
 
-export default function UserScreen({ navigation }: any) {
-  const { currentUser, userFunctions } = useCurrentUser();
+export default function AdminPanel({ navigation }: any) {
+  const { currentUser } = useCurrentUser();
 
   React.useEffect(() => {
     if (!currentUser || !Object.keys(currentUser)) {
@@ -16,6 +16,14 @@ export default function UserScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Admin panel</Text>
+      <View style={styles.subtitleArea}>
+        <Text style={styles.subtitle}>
+          Bienvenido al panel de administradores
+        </Text>
+        <Text style={styles.subheader}>
+          Desde acá podés gestionar tus comercios adheridos y productos
+        </Text>
+      </View>
 
       <View style={styles.actionsContainer}>
         <MyButton
@@ -49,5 +57,16 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     width: "100%",
+  },
+  subtitleArea: {
+    alignItems: "center",
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  subheader: {
+    textAlign: "center",
   },
 });

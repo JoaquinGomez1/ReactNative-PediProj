@@ -10,11 +10,13 @@ interface FormAddProductProps {
   onSubmit?: () => void;
 }
 
-// TODO: Hacer un array para poder mapear los elementos
+// TODO: Make an array to map TextInputs
 export default function FormAddProduct({
   buttonStyle,
   onSubmit,
 }: PropsWithRef<FormAddProductProps>) {
+  // ! Keep this component as dumb as posible.
+  // ! This is meant to be exlusively used as a UI Component
   const [currentProductData, setCurrentProductData] = useState(mockProduct);
 
   const handleNumericInputs = (numberString: string): number | undefined => {
@@ -66,7 +68,7 @@ export default function FormAddProduct({
               units: handleNumericInputs(text)!,
             })
           }
-          value={currentProductData?.units?.toString()} // ! Cuidado con pasarlo a string porque es un int. Ver mas tarde
+          value={currentProductData?.units?.toString()} // ! parsing It to string it may or may not cause problems later
         />
         <TextInput
           style={styles.input}

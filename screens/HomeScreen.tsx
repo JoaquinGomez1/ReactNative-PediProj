@@ -48,7 +48,7 @@ export default function TabOneScreen({ navigation, route }: any) {
             height: 1,
             backgroundColor: Colors.colors.gray[200],
           }}
-        ></View>
+        />
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,

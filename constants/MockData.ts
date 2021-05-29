@@ -11,6 +11,19 @@ export const mockProduct = {
   price: 60,
 };
 
+export const mockCommerce: Commerce = {
+  id: 2634891,
+  name: "Mock Commerce",
+  description:
+    "Blank descriptionOccaecat nulla eiusmod ex consequat quis nostrud officia est commodo.",
+  img: "",
+  location: {
+    longitude: -40.0641,
+    latitude: -65.0641,
+  },
+  category: 1,
+};
+
 export const productList: Product[] = [
   {
     img: "https://img.interempresas.net/fotos/1622791.jpeg",

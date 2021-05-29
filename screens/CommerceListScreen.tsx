@@ -55,6 +55,7 @@ export default function CommerceListScreen({
   const handleBadgePress = (id: string | number) => {
     if (id === selectedCategory) {
       setCommerceList(initialData);
+      setSelectedCategory(undefined);
       return;
     }
     const filteredCommerces = initialData.filter(

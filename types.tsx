@@ -4,7 +4,7 @@
  */
 
 import { Dispatch } from "react";
-import { LatLng, Region } from "react-native-maps";
+import { LatLng } from "react-native-maps";
 
 export type RootStackParamList = {
   Root: undefined;
@@ -54,11 +54,10 @@ export type Location = {
 export type Commerce = {
   id: number | string;
   name: string;
+  description: string;
   img: string;
   location: LatLng;
-  owner?: User;
   category: Category["id"];
-  description: string;
 };
 
 export type Category = {

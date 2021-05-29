@@ -29,7 +29,7 @@ export default function ProductDetail({
     navigation.navigate("Home", { screen: "Home" });
 
   const handleNavigation = () => {
-    navigation.navigate("Categories", {
+    navigation.navigate("Comercios", {
       screen: "CommerceDetailScreen",
       params: { commerce: commerceSelected },
     });
@@ -49,10 +49,8 @@ export default function ProductDetail({
       <View style={styles.infoContainer}>
         <Text>
           <TouchableOpacity onPress={handleNavigation}>
-            <Text>
-              Comercio:{" "}
-              <Text style={styles.commerceLink}>{commerceSelected?.name}</Text>{" "}
-            </Text>
+            <Text>Comercio:</Text>
+            <Text style={styles.commerceLink}>{commerceSelected?.name}</Text>
           </TouchableOpacity>
         </Text>
 
