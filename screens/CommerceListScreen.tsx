@@ -1,3 +1,4 @@
+import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as React from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -8,7 +9,7 @@ import Category from "../components/Category";
 import SearchBar from "../components/SearchBar";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
-import { commerceList as mockData } from "../constants/MockData";
+import { commerceList as initialData } from "../constants/MockData";
 import useCategories from "../hooks/useCategories";
 import { Commerce } from "../types";
 
@@ -16,22 +17,28 @@ type CategoriesNavigationProps = StackNavigationProp<any, any>;
 
 interface CommerceDetailScreen {
   navigation: CategoriesNavigationProps;
+  route: RouteProp<any, any>;
 }
 
 export default function CommerceListScreen({
   navigation,
+  route,
 }: React.PropsWithRef<CommerceDetailScreen>) {
   const [commerceList, setCommerceList] =
-    React.useState<Commerce[] | []>(mockData);
+    React.useState<Commerce[] | []>(initialData);
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<number | string | undefined>();
   const { categories } = useCategories();
 
   React.useEffect(() => {
-    setCommerceList(mockData);
-  }, [navigation]);
+    setCommerceList(initialData);
+  }, [route]);
+
+  React.useEffect(() => {}, [selectedCategory]);
 
   const handleTextChanged = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = mockData.filter((each) => regex.test(each.name));
+    const filteredList = initialData.filter((each) => regex.test(each.name));
 
     const encontradoEnLocal = filteredList.length >= 1;
     if (encontradoEnLocal) setCommerceList(filteredList);
@@ -46,11 +53,15 @@ export default function CommerceListScreen({
   };
 
   const handleBadgePress = (id: string | number) => {
-    //  TODO: Make this work with http requests aswell
-    const filteredCommerces = commerceList.filter(
+    if (id === selectedCategory) {
+      setCommerceList(initialData);
+      return;
+    }
+    const filteredCommerces = initialData.filter(
       (each) => each.category === id
     );
     setCommerceList(filteredCommerces);
+    setSelectedCategory(id);
   };
 
   return (
@@ -63,11 +74,11 @@ export default function CommerceListScreen({
         />
 
         <View style={{ height: 40, marginTop: 8 }}>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal>
             {categories.map((eachCategory) => (
               <Badge
                 onPress={() => handleBadgePress(eachCategory.id)}
-                style={{ marginHorizontal: 8 }}
+                style={styles.badge}
                 key={eachCategory.id}
                 text={eachCategory.name}
                 iconName={eachCategory.icon}
@@ -125,5 +136,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     paddingBottom: 40,
+  },
+  badge: {
+    marginHorizontal: 8,
   },
 });

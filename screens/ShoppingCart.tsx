@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { View } from "../components/Themed";
 // import { ScrollView } from "react-native-gesture-handler";
 import ProductComponent from "../components/Product";
@@ -14,20 +15,20 @@ export default function ShoppingCart({ navigation, route }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{cart?.length} productos en la cesta</Text>
-      <FlatList
-        contentContainerStyle={{ width: "100%", justifyContent: "center" }}
-        data={cart}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+
+      <ScrollView>
+        {cart.map((item) => (
           <ProductComponent
+            key={item.id}
             onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
             style={styles.card}
             navigation={navigation}
             product={item}
             route={route}
           />
-        )}
-      />
+        ))}
+      </ScrollView>
+
       <View
         style={{
           width: "100%",
@@ -37,6 +38,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         }}
       >
         <MyButton
+          altStyle
           title="Limpiar cesta"
           onPress={() => cartFunctions.clearCart()}
         />

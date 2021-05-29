@@ -159,7 +159,7 @@ export const InitialRegion = {
   ...defaultDeltas,
 };
 
-// !Deprecated
+// !Do not use ↓
 // function getLongitudDelta() {
 //   const window = Dimensions.get("window");
 //   const { width } = window;

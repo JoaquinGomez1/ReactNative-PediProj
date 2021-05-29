@@ -26,7 +26,7 @@ export default function CommerceDetailScreen({
 
       <View style={styles.descriptionContainer}>
         <View style={styles.descriptionRow}>
-          <Text style={styles.descriptionTitle}>Descripción</Text>
+          <Text style={styles.descriptionTitle}>Descripción: </Text>
           <Text style={{ fontWeight: "bold" }}>{categorySelected?.name}</Text>
         </View>
         <View style={styles.separator} />
@@ -86,10 +86,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   descriptionTitle: {
-    fontSize: 22,
+    fontSize: 18,
   },
   descriptionText: {
-    fontSize: 16,
+    fontSize: 14,
   },
   mapContainer: {
     width: "100%",

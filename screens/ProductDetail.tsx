@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 
 import { Text, View } from "../components/Themed";
@@ -28,6 +28,13 @@ export default function ProductDetail({
   if (!productId || !Object.keys(product))
     navigation.navigate("Home", { screen: "Home" });
 
+  const handleNavigation = () => {
+    navigation.navigate("Categories", {
+      screen: "CommerceDetailScreen",
+      params: { commerce: commerceSelected },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{product.title}</Text>
@@ -39,13 +46,20 @@ export default function ProductDetail({
         <Text>{product.units} unidades</Text>
       </View>
 
-      <View style={{ maxHeight: 150 }}>
-        <Text> Comercio: {commerceSelected?.name}</Text>
+      <View style={styles.infoContainer}>
+        <Text>
+          <TouchableOpacity onPress={handleNavigation}>
+            <Text>
+              Comercio:{" "}
+              <Text style={styles.commerceLink}>{commerceSelected?.name}</Text>{" "}
+            </Text>
+          </TouchableOpacity>
+        </Text>
+
+        <Text style={styles.descriptionTitle}>Descripción:</Text>
+        <View style={styles.separator} />
 
         <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-          <Text style={styles.descriptionTitle}>Descripción:</Text>
-          <View style={styles.separator} />
-
           <View style={styles.descriptionArea}>
             <Text>{product.description}</Text>
           </View>
@@ -69,7 +83,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   separator: {
-    width: "100%",
+    width: 370,
     backgroundColor: "#b3b3b3",
     height: 1,
     marginVertical: 15,
@@ -88,6 +102,15 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 32,
+  },
+  infoContainer: {
+    justifyContent: "center",
+    maxHeight: "30%",
+    width: "100%",
+  },
+  commerceLink: {
+    color: Colors.colors.red[400],
+    fontWeight: "700",
   },
   priceArea: {
     width: "100%",

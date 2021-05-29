@@ -25,13 +25,18 @@ export default function UserScreen({ navigation }: any) {
 
         <View style={{ width: "100%", paddingHorizontal: 20 }}>
           <MyButton
-            title="Get current user"
+            title="Usuario actual"
             onPress={() =>
               alert(
                 JSON.stringify(userFunctions.getCurrentSignedInUser(), null, 4)
               )
             }
           />
+          <MyButton
+            onPress={() => navigation.push("AdminPanel")}
+            title="Panel administrador"
+          />
+
           <MyButton title="Log out" onPress={() => userFunctions.logout()} />
         </View>
       </View>

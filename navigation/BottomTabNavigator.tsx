@@ -19,6 +19,9 @@ import UserScreen from "../screens/UserScreen";
 import firebaseApp from "../config.firebase";
 import LoadingScreen from "../screens/LoadingScreen";
 import CommerceDetailScreen from "../screens/CommerceDetailScreen";
+import AdminPanelScreen from "../screens/AdminPanelScreen";
+import ManageProductsScreen from "../screens/ManageProductScreen";
+import ManageCommercesScreen from "../screens/ManageCommerceScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -38,7 +41,7 @@ const authNavigators: Array<NavigatorArrayContent> = [
     auth: true,
   },
   { name: "Cart", component: CartNavigator, iconName: "cart", auth: true },
-  { name: "User", component: UserScreen, iconName: "person", auth: true },
+  { name: "User", component: UserNavigator, iconName: "person", auth: true },
   { name: "Login", component: LoginScreen, iconName: "log-in", auth: false },
   { name: "SignUp", component: SignupScreen, iconName: "create", auth: false },
 ];
@@ -180,5 +183,35 @@ function CartNavigator() {
         component={ShoppingCart}
       />
     </CartStack.Navigator>
+  );
+}
+
+const UserStack = createStackNavigator();
+
+function UserNavigator() {
+  return (
+    <UserStack.Navigator initialRouteName="User">
+      <UserStack.Screen
+        name="User"
+        options={{ headerShown: true }}
+        component={UserScreen}
+      />
+
+      <UserStack.Screen
+        name="AdminPanel"
+        options={{ headerShown: true, title: "Admin Panel" }}
+        component={AdminPanelScreen}
+      />
+      <UserStack.Screen
+        name="ManageProducts"
+        options={{ headerShown: true, title: "Manage food" }}
+        component={ManageProductsScreen}
+      />
+      <UserStack.Screen
+        name="ManageCommerces"
+        options={{ headerShown: true, title: "Manage commerces" }}
+        component={ManageCommercesScreen}
+      />
+    </UserStack.Navigator>
   );
 }

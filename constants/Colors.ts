@@ -20,6 +20,7 @@ export default {
   },
   colors: {
     // Using Tailwind reference colors
+    // https://tailwindcss.com/docs/customizing-colors
     buttons: "#3B82F6",
     borders: "#E5E7EB",
     red: {
