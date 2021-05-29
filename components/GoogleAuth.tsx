@@ -60,6 +60,7 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
         backgroundColor: Colors.colors.blue[400],
         alignItems: "center",
         borderRadius: 8,
+        borderColor: Colors.colors.blue[400],
       }}
       title="Login con google"
       onPress={handleLogin}

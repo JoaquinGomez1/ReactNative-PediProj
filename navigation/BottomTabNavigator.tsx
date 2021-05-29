@@ -35,7 +35,7 @@ type NavigatorArrayContent = {
 const authNavigators: Array<NavigatorArrayContent> = [
   { name: "Home", component: HomeNavigator, iconName: "home", auth: true },
   {
-    name: "Categories",
+    name: "Comercios",
     component: CategoriesNavigator,
     iconName: "folder-open",
     auth: true,

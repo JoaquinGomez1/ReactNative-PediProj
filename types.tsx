@@ -12,7 +12,7 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  Categories: undefined;
+  Comercios: undefined;
   Home: undefined;
   Cart: undefined;
   Login: undefined;

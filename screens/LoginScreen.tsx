@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 
 import { Text, View } from "../components/Themed";
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import MyButton from "../components/Button";
 import { useCurrentUser } from "../context/User";
 import GoogleAuth from "../components/GoogleAuth";
@@ -12,6 +12,19 @@ export default function LoginScreen({ navigation }: any) {
   const { userFunctions } = useCurrentUser();
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
+
+  const handleLogin = (email: string, password: string) => {
+    const emailRegex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const isEmailValid = emailRegex.test(email);
+
+    if (!isEmailValid) {
+      alert("Invalid email");
+      return;
+    }
+
+    userFunctions.login(email, password);
+  };
 
   return (
     <View style={styles.container}>
@@ -36,12 +49,19 @@ export default function LoginScreen({ navigation }: any) {
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
         />
-        <MyButton
-          title="Login"
-          onPress={() => userFunctions.login(email, password)}
-        />
+        <MyButton title="Login" onPress={() => handleLogin(email, password)} />
         <Text style={{ textAlign: "center", marginBottom: 10 }}>Or</Text>
         <GoogleAuth disabled />
+      </View>
+      <View style={styles.bottomInfo}>
+        <Text style={styles.bottomInfoText}>Todavia no tenes una cuenta?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text
+            style={[styles.bottomInfoText, { color: Colors.colors.red[600] }]}
+          >
+            Registrate
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -76,5 +96,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: Colors.colors.gray[300],
+  },
+  bottomInfo: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomInfoText: {
+    fontSize: 16,
   },
 });

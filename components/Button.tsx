@@ -34,7 +34,7 @@ export default function MyButton({
 
   return (
     <TouchableOpacity style={styles.container} {...rest}>
-      <View style={[style, btnStyles?.button]}>
+      <View style={[btnStyles?.button, style]}>
         <Text style={btnStyles?.buttonText}>{title}</Text>
       </View>
     </TouchableOpacity>

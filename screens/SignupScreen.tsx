@@ -1,12 +1,11 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Colors from "../constants/Colors";
 
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
 import MyButton from "../components/Button";
 import { useCurrentUser } from "../context/User";
-import { mockUser } from "../constants/MockData";
 import { User } from "../types";
 
 export default function SignupScreen({ navigation }: any) {
@@ -20,7 +19,10 @@ export default function SignupScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Registrate</Text>
+      <Text style={styles.subtitle}>
+        Empezá a buscar tus productos favoritos
+      </Text>
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -60,6 +62,16 @@ export default function SignupScreen({ navigation }: any) {
           onPress={() => userFunctions.signup(currentUserData, password)}
         />
       </View>
+      <View style={styles.bottomInfo}>
+        <Text style={styles.bottomInfoText}>Ya tienes una cuenta?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text
+            style={[styles.bottomInfoText, { color: Colors.colors.red[600] }]}
+          >
+            Logueate
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -73,6 +85,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   separator: {
     marginVertical: 30,
@@ -91,5 +107,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: Colors.colors.gray[300],
+  },
+  bottomInfo: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomInfoText: {
+    fontSize: 16,
   },
 });

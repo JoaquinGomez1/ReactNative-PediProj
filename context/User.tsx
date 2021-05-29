@@ -11,10 +11,15 @@ export function UserProvider(props: any) {
     () => ({
       login: async (email, password) => {
         if (!email || !password) return;
+        try {
+          const { user } = await firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password);
 
-        firebase.auth().signInWithEmailAndPassword(email, password);
-        const currentAuthUser = firebase.auth().currentUser;
-        setCurrentUser({ ...currentAuthUser, isLoggedIn: true });
+          setCurrentUser({ ...user, isLoggedIn: true });
+        } catch (err) {
+          alert(err);
+        }
       },
       loginWithFirebase: () => {
         const googleUser = firebase.auth().currentUser;
@@ -34,8 +39,14 @@ export function UserProvider(props: any) {
         setCurrentUser({});
       },
       signup: async (user: User, password) => {
-        firebase.auth().createUserWithEmailAndPassword(user.email, password);
-        setCurrentUser({ ...user, isLoggedIn: true });
+        try {
+          const returnedUser = await firebase
+            .auth()
+            .createUserWithEmailAndPassword(user.email, password);
+          setCurrentUser({ ...returnedUser, isLoggedIn: true });
+        } catch (err) {
+          alert(err);
+        }
       },
       getCurrentSignedInUser: () => {
         return firebase.auth().currentUser;
