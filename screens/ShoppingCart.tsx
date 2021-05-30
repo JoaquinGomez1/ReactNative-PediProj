@@ -1,33 +1,44 @@
 import React from "react";
 import { FlatList, StyleSheet, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { View } from "../components/Themed";
-// import { ScrollView } from "react-native-gesture-handler";
 import ProductComponent from "../components/Product";
 import { useCart } from "../context/Cart";
-// import { Product } from "../types";
 import MyButton from "../components/Button";
 import Colors from "../constants/Colors";
 
+const PRODUCT_HEIGHT = 300;
+
 export default function ShoppingCart({ navigation, route }: any) {
   const { cart, cartFunctions } = useCart();
+  const cartWithFiller = [...cart, { id: "filler-bottom" }];
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{cart?.length} productos en la cesta</Text>
 
-      <ScrollView>
-        {cart.map((item) => (
-          <ProductComponent
-            key={item.id}
-            onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
-            style={styles.card}
-            navigation={navigation}
-            product={item}
-            route={route}
-          />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={cartWithFiller}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        bounces
+        keyExtractor={({ id }) => `${id}`}
+        style={{ width: "70%" }}
+        snapToInterval={PRODUCT_HEIGHT}
+        renderItem={({ item }) =>
+          item.id === "filler-bottom" ? (
+            <View style={{ height: PRODUCT_HEIGHT / 2 }}></View>
+          ) : (
+            <ProductComponent
+              key={item.id}
+              onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
+              style={styles.card}
+              navigation={navigation}
+              product={item}
+              route={route}
+            />
+          )
+        }
+      />
 
       <View
         style={{
@@ -41,6 +52,10 @@ export default function ShoppingCart({ navigation, route }: any) {
           altStyle
           title="Limpiar cesta"
           onPress={() => cartFunctions.clearCart()}
+        />
+        <MyButton
+          title="Comprar productos"
+          onPress={() => alert("Esperando implementacion")}
         />
       </View>
     </View>
@@ -59,5 +74,6 @@ const styles = StyleSheet.create({
   },
   card: {
     marginVertical: 8,
+    height: PRODUCT_HEIGHT,
   },
 });

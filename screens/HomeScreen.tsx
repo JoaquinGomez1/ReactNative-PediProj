@@ -32,7 +32,9 @@ export default function TabOneScreen({ navigation, route }: any) {
       </View>
       <View style={styles.container}>
         <View style={styles.subheader}>
-          <Text style={styles.subheaderText}>Hola. {currentUser?.email}</Text>
+          <Text style={styles.subheaderText}>
+            Hola. {currentUser?.displayName || currentUser?.email}
+          </Text>
           <CurrentUserAvatar />
         </View>
         <View style={{ width: "100%", marginVertical: 20 }}>
@@ -50,6 +52,8 @@ export default function TabOneScreen({ navigation, route }: any) {
           }}
         />
         <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
             alignItems: "center",

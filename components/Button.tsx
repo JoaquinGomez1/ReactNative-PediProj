@@ -17,6 +17,7 @@ interface MyButtonProps {
   title: string;
   onPress: () => void;
   altStyle?: boolean;
+  disabled?: boolean;
 }
 
 interface ButtonStyles {
@@ -28,12 +29,13 @@ export default function MyButton({
   style,
   title,
   altStyle = false,
+  disabled,
   ...rest
 }: PropsWithoutRef<MyButtonProps>) {
   const btnStyles = buttonStyle(altStyle);
 
   return (
-    <TouchableOpacity style={styles.container} {...rest}>
+    <TouchableOpacity style={styles.container} disabled={disabled} {...rest}>
       <View style={[btnStyles?.button, style]}>
         <Text style={btnStyles?.buttonText}>{title}</Text>
       </View>

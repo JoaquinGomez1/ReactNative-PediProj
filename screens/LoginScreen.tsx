@@ -51,7 +51,7 @@ export default function LoginScreen({ navigation }: any) {
         />
         <MyButton title="Login" onPress={() => handleLogin(email, password)} />
         <Text style={{ textAlign: "center", marginBottom: 10 }}>Or</Text>
-        <GoogleAuth disabled />
+        <GoogleAuth />
       </View>
       <View style={styles.bottomInfo}>
         <Text style={styles.bottomInfoText}>Todavia no tenes una cuenta?</Text>

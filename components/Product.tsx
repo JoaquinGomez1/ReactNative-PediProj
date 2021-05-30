@@ -86,7 +86,7 @@ export default function Product(props: ProductProps) {
     >
       <Animated.View
         {...props}
-        style={[styles.container, productAnimationDetails]}
+        style={[styles.container, productAnimationDetails, props.style]}
       >
         <TouchableOpacity onPress={handleNavigation}>
           <ProductImage source={{ uri: product?.img }} />
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   container: {
-    width: "90%",
+    width: "100%",
+    minWidth: 260,
     height: 330,
     alignItems: "center",
     borderRadius: 6,

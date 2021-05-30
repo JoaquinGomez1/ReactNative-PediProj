@@ -82,14 +82,14 @@ export interface User {
 }
 
 export type UserState = {
-  currentUser: User | firebase.default.User | undefined;
+  currentUser: firebase.default.User | undefined;
   userFunctions: UserActions;
   setCurrentUser: Dispatch<User | firebase.default.User | {}>;
 };
 
 export type UserActions = {
   login: (email: string, password: string) => void;
-  loginWithFirebase: () => void;
+  // loginWithFirebase: () => void;
   logout: () => void;
   signup: (user: User, password: string) => void;
   getCurrentSignedInUser: () => Object | null | undefined;

@@ -1,17 +1,17 @@
-import { RouteProp } from "@react-navigation/core";
+import { RouteProp, useFocusEffect } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-import * as React from "react";
+import React, { useState, useCallback } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Badge from "../components/Badge";
 
-import Category from "../components/Category";
+import Commerce from "../components/Commerce";
 import SearchBar from "../components/SearchBar";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { commerceList as initialData } from "../constants/MockData";
 import useCategories from "../hooks/useCategories";
-import { Commerce } from "../types";
+import { Category as CategoryType, Commerce as CommerceType } from "../types";
 
 type CategoriesNavigationProps = StackNavigationProp<any, any>;
 
@@ -22,19 +22,21 @@ interface CommerceDetailScreen {
 
 export default function CommerceListScreen({
   navigation,
-  route,
 }: React.PropsWithRef<CommerceDetailScreen>) {
   const [commerceList, setCommerceList] =
-    React.useState<Commerce[] | []>(initialData);
+    useState<CommerceType[] | []>(initialData);
+
   const [selectedCategory, setSelectedCategory] =
-    React.useState<number | string | undefined>();
+    useState<number | string | undefined>();
+
   const { categories } = useCategories();
 
-  React.useEffect(() => {
-    setCommerceList(initialData);
-  }, [route]);
-
-  React.useEffect(() => {}, [selectedCategory]);
+  useFocusEffect(
+    useCallback(() => {
+      setCommerceList(initialData);
+      setSelectedCategory(undefined);
+    }, [])
+  );
 
   const handleTextChanged = (text: string) => {
     const regex = new RegExp(text, "gi");
@@ -48,12 +50,13 @@ export default function CommerceListScreen({
     } // Buscar en base de datos
   };
 
-  const handleNavigation = (commerce: Commerce | undefined) => {
+  const handleNavigation = (commerce: CommerceType | undefined) => {
     navigation.push("CommerceDetailScreen", { commerce });
   };
 
   const handleBadgePress = (id: string | number) => {
-    if (id === selectedCategory) {
+    const isCategorySelected = id === selectedCategory;
+    if (isCategorySelected) {
       setCommerceList(initialData);
       setSelectedCategory(undefined);
       return;
@@ -65,6 +68,13 @@ export default function CommerceListScreen({
     setSelectedCategory(id);
   };
 
+  const determineBadgeBackgroundColor = (eachCategory: CategoryType) => ({
+    backgroundColor:
+      eachCategory.id === selectedCategory
+        ? Colors.colors.red[600]
+        : Colors.colors.red[400],
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -75,11 +85,18 @@ export default function CommerceListScreen({
         />
 
         <View style={{ height: 40, marginTop: 8 }}>
-          <ScrollView horizontal>
+          <ScrollView
+            horizontal
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
             {categories.map((eachCategory) => (
               <Badge
                 onPress={() => handleBadgePress(eachCategory.id)}
-                style={styles.badge}
+                style={[
+                  styles.badge,
+                  determineBadgeBackgroundColor(eachCategory),
+                ]}
                 key={eachCategory.id}
                 text={eachCategory.name}
                 iconName={eachCategory.icon}
@@ -97,9 +114,11 @@ export default function CommerceListScreen({
         <FlatList
           contentContainerStyle={styles.list}
           data={commerceList}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           keyExtractor={({ id }) => `${id}`}
           renderItem={({ item }) => (
-            <Category
+            <Commerce
               handleNavigation={() => handleNavigation(item)}
               category={item}
             />

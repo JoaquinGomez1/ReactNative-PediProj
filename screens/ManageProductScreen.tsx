@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text, View } from "../components/Themed";
 import MyButton from "../components/Button";
@@ -26,9 +26,9 @@ const actions = [
   },
 ];
 
-export default function ManageProductsScreen({ navigation }: any) {
-  const [selectedAction, setSelectedAction] =
-    React.useState<number | undefined>();
+export default function ManageProductsScreen() {
+  const [selectedAction, setSelectedAction] = useState<number | undefined>();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Gestionar productos</Text>

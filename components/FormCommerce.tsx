@@ -1,5 +1,11 @@
 import React, { PropsWithRef, useState } from "react";
-import { StyleProp, StyleSheet, TextInput, ViewStyle } from "react-native";
+import {
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  ViewStyle,
+} from "react-native";
 import Colors from "../constants/Colors";
 import { mockCommerce } from "../constants/MockData";
 import MyButton from "./Button";
@@ -32,20 +38,29 @@ const allInputs = (
   currentCommerceData: Commerce,
   setCurrentCommerceData: React.Dispatch<React.SetStateAction<Commerce>>
 ): InputTypes[] => [
-  { name: "name", textChangeHandler: () => undefined, placeholder: "Nombre" },
+  {
+    name: "name",
+    textChangeHandler: (text) => undefined,
+    placeholder: "Nombre",
+  },
   {
     name: "description",
-    textChangeHandler: () => undefined,
+    textChangeHandler: (text) => undefined,
     placeholder: "Descripción",
   },
   {
     name: "img",
-    textChangeHandler: () => undefined,
+    textChangeHandler: (text) => undefined,
     placeholder: "URL imagen",
   },
   {
     name: "location",
-    textChangeHandler: () => undefined,
+    textChangeHandler: (text) => {
+      setCurrentCommerceData({
+        ...currentCommerceData,
+        category: handleNumericInputs(text)!,
+      });
+    },
     placeholder: "Longitud",
     key: "longitude",
   },
@@ -62,7 +77,7 @@ const allInputs = (
   },
   {
     name: "category",
-    textChangeHandler: () => undefined,
+    textChangeHandler: (text) => undefined,
     placeholder: "Id de categoría",
   },
 ];
@@ -75,7 +90,7 @@ export default function FormCommerce({
 
   return (
     <View style={styles.container}>
-      <View style={{ width: "100%", paddingHorizontal: 10 }}>
+      <ScrollView style={{ width: "100%", paddingHorizontal: 10 }}>
         {allInputs(currentCommerceData, setCurrentCommerceData).map(
           ({ placeholder, name, textChangeHandler, key }) => (
             <TextInput
@@ -85,14 +100,18 @@ export default function FormCommerce({
               onChangeText={textChangeHandler}
               value={
                 name === "location"
-                  ? currentCommerceData[name][key!]
-                  : currentCommerceData[name]
+                  ? currentCommerceData[name][key!].toString()
+                  : currentCommerceData[name].toString()
               }
             />
           )
         )}
-      </View>
-      <MyButton title="Agregar" onPress={() => onSubmit} style={buttonStyle} />
+      </ScrollView>
+      <MyButton
+        title="Agregar"
+        onPress={() => onSubmit && onSubmit()}
+        style={buttonStyle}
+      />
       <MyButton
         title="Ver JSON Data"
         onPress={() => alert(JSON.stringify(currentCommerceData, null, 4))}

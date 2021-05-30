@@ -20,7 +20,7 @@ export default function UserScreen({ navigation }: any) {
       <View style={styles.infoContainer}>
         <View style={styles.infoContainer}>
           <CurrentUserAvatar />
-          <Text>{currentUser?.email}</Text>
+          <Text>{currentUser?.displayName || currentUser?.email}</Text>
         </View>
 
         <View style={{ width: "100%", paddingHorizontal: 20 }}>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   infoContainer: {
+    flex: 1,
     width: "100%",
     alignItems: "center",
   },

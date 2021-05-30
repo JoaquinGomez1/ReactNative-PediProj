@@ -1,5 +1,5 @@
 import React, { PropsWithRef } from "react";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Colors from "../constants/Colors";
 import { Category as CategoryType } from "../types";
 import ProductImage from "./ProductImage";
@@ -11,7 +11,7 @@ interface CategoryProp {
   children?: React.ReactNode;
 }
 
-export default function Category({
+export default function Commerce({
   handleNavigation,
   category,
   children,
