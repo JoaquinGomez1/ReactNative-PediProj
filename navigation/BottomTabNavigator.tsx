@@ -5,7 +5,6 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import HomeScreen from "../screens/HomeScreen";
-import InfoScreen from "../screens/CategoriesScreen";
 import CommerceScreen from "../screens/CommerceListScreen";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 import ProductDetail from "../screens/ProductDetail";
@@ -22,6 +21,7 @@ import CommerceDetailScreen from "../screens/CommerceDetailScreen";
 import AdminPanelScreen from "../screens/AdminPanelScreen";
 import ManageProductsScreen from "../screens/ManageProductScreen";
 import ManageCommercesScreen from "../screens/ManageCommerceScreen";
+import ProductListScreen from "../screens/ManageProductScreen/ProductListScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -207,6 +207,13 @@ function UserNavigator() {
         options={{ headerShown: true, title: "Gestionar Productos" }}
         component={ManageProductsScreen}
       />
+
+      <UserStack.Screen
+        name="EditProducts"
+        options={{ headerShown: true, title: "Editar o Eliminar Productos" }}
+        component={ProductListScreen}
+      />
+
       <UserStack.Screen
         name="ManageCommerces"
         options={{ headerShown: true, title: "Gestionar comercios" }}

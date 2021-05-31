@@ -31,7 +31,7 @@ export default function SignupScreen({ navigation }: any) {
       <View style={{ width: "100%", paddingHorizontal: 20 }}>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Nombre de usuario"
           onChangeText={(text) =>
             setCurrentUserData({ ...currentUserData, username: text })
           }
@@ -45,7 +45,7 @@ export default function SignupScreen({ navigation }: any) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Address"
+          placeholder="Direccion"
           onChangeText={(text) =>
             setCurrentUserData({ ...currentUserData, address: text })
           }
@@ -53,12 +53,19 @@ export default function SignupScreen({ navigation }: any) {
         <TextInput
           style={styles.input}
           autoCompleteType="password"
-          placeholder="Password"
+          placeholder="Contraseña"
+          secureTextEntry={true}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TextInput
+          style={styles.input}
+          autoCompleteType="password"
+          placeholder="Confirmar Contraseña"
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
         <MyButton
-          title="Sign Up"
+          title="Registrate"
           onPress={() => userFunctions.signup(currentUserData, password)}
         />
       </View>

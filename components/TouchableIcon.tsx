@@ -1,11 +1,16 @@
 import React, { PropsWithRef } from "react";
-import { StyleProp, ViewStyle, TouchableOpacity } from "react-native";
+import {
+  StyleProp,
+  ViewStyle,
+  TouchableOpacity,
+  TextStyle,
+} from "react-native";
 import Icon from "./DefaultIcon";
 
 interface TouchableIconProps {
   iconName: string;
   onPress: () => void;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 export default function TouchableIcon({

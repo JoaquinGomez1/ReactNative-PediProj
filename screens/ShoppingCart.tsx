@@ -1,5 +1,6 @@
 import React from "react";
-import { FlatList, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { View } from "../components/Themed";
 import ProductComponent from "../components/Product";
 import { useCart } from "../context/Cart";
@@ -10,34 +11,30 @@ const PRODUCT_HEIGHT = 300;
 
 export default function ShoppingCart({ navigation, route }: any) {
   const { cart, cartFunctions } = useCart();
-  const cartWithFiller = [...cart, { id: "filler-bottom" }];
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{cart?.length} productos en la cesta</Text>
 
       <FlatList
-        data={cartWithFiller}
+        data={cart}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         bounces
         keyExtractor={({ id }) => `${id}`}
-        style={{ width: "70%" }}
-        snapToInterval={PRODUCT_HEIGHT}
-        renderItem={({ item }) =>
-          item.id === "filler-bottom" ? (
-            <View style={{ height: PRODUCT_HEIGHT / 2 }}></View>
-          ) : (
-            <ProductComponent
-              key={item.id}
-              onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
-              style={styles.card}
-              navigation={navigation}
-              product={item}
-              route={route}
-            />
-          )
-        }
+        style={{ width: "80%" }}
+        renderItem={({ item }) => (
+          <ProductComponent
+            key={item.id}
+            onSwipeLeft={() => cartFunctions.deleteFromCart(item.id)}
+            style={styles.card}
+            navigation={navigation}
+            product={item}
+            route={route}
+          >
+            <Text style={styles.quantity}>Cantidad: {item.units}</Text>
+          </ProductComponent>
+        )}
       />
 
       <View
@@ -48,6 +45,11 @@ export default function ShoppingCart({ navigation, route }: any) {
           borderTopWidth: 1,
         }}
       >
+        <View>
+          <Text style={styles.total}>
+            Total: ${cartFunctions.getCartTotal()}.00
+          </Text>
+        </View>
         <MyButton
           altStyle
           title="Limpiar cesta"
@@ -75,5 +77,15 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 8,
     height: PRODUCT_HEIGHT,
+  },
+  total: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.colors.gray[600],
+  },
+  quantity: {
+    textAlign: "left",
+    fontSize: 16,
+    color: Colors.colors.gray[600],
   },
 });

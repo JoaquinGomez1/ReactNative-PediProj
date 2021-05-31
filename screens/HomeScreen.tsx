@@ -7,28 +7,32 @@ import { Text, View } from "../components/Themed";
 import MyButton from "../components/Button";
 import cartContext from "../context/Cart";
 import { CartState } from "../types";
-import { productList as mockList } from "../constants/MockData";
+import { productList as initialData } from "../constants/MockData";
 import Product from "../components/Product";
 import SearchBar from "../components/SearchBar";
 import UserContext from "../context/User";
 import CurrentUserAvatar from "../components/CurrentUserAvatar";
+import useInitialFetch from "../hooks/useInitialFetch";
+import { Product as ProductType } from "../types";
+import Loader from "../components/Loader";
+import Layout from "../constants/Layout";
 
 export default function TabOneScreen({ navigation, route }: any) {
   const { cartFunctions } = useContext<CartState>(cartContext);
   const { currentUser } = useContext(UserContext);
-  const [productList, setProductList] = useState(mockList);
+  //const { data, isLoading } = useInitialFetch("/products");
+  const [productList, setProductList] = useState<ProductType[]>(initialData);
 
   const handleSearchTextChange = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = mockList.filter((each) => regex.test(each.title));
+    const filteredList = initialData.filter((each) => regex.test(each.title));
     setProductList(filteredList);
   };
 
   return (
-    <View style={{ paddingHorizontal: 30, flex: 1 }}>
+    <View style={styles.pageContainer}>
       <View style={styles.header}>
         <Text style={styles.title}>Pedi-Proj</Text>
-        <View style={styles.separator} />
       </View>
       <View style={styles.container}>
         <View style={styles.subheader}>
@@ -44,47 +48,47 @@ export default function TabOneScreen({ navigation, route }: any) {
           />
         </View>
         <Text style={styles.highlightedProducts}>Productos destacados</Text>
-        <View
-          style={{
-            width: "100%",
-            height: 1,
-            backgroundColor: Colors.colors.gray[200],
-          }}
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {productList?.length <= 0 ? (
-            <Text style={styles.notFound}>No se encontraron productos</Text>
-          ) : (
-            productList.map((each) => (
-              <Product
-                navigation={navigation}
-                product={each}
-                key={`${each.id}`}
-                onSwipeRight={() => cartFunctions.addToCart(each)}
-                route={route}
-              >
-                <MyButton
-                  title="Agregar a carrito"
-                  onPress={() => cartFunctions.addToCart(each)}
-                />
-              </Product>
-            ))
-          )}
-        </ScrollView>
+        <View style={styles.separator} />
+        {
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {productList?.length <= 0 ? (
+              <Text style={styles.notFound}>No se encontraron productos</Text>
+            ) : (
+              productList?.map((each) => (
+                <Product
+                  navigation={navigation}
+                  product={each}
+                  key={`${each?.id}`}
+                  onSwipeRight={() => cartFunctions.addToCart(each)}
+                  route={route}
+                >
+                  <MyButton
+                    title="Agregar a carrito"
+                    onPress={() => cartFunctions.addToCart(each)}
+                  />
+                </Product>
+              ))
+            )}
+          </ScrollView>
+        }
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    paddingHorizontal: Layout.spacing[4],
+    flex: 1,
+  },
   header: { marginTop: 40, alignItems: "center" },
   container: {
     flex: 1, // Use full screen
@@ -100,11 +104,9 @@ const styles = StyleSheet.create({
     color: Colors.colors.red[400],
   },
   separator: {
-    marginVertical: 10,
-    backgroundColor: "white",
-    opacity: 0.4,
-    height: 1,
-    width: "80%",
+    width: "100%",
+    height: 2,
+    backgroundColor: Colors.colors.gray[200],
   },
   subheaderText: {
     fontSize: 17,

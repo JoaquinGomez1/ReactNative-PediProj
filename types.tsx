@@ -38,6 +38,7 @@ export type Product = {
   description?: string;
   img: string;
   units: number;
+  maxUnits?: number;
   price: number;
   available?: boolean;
   createdDate?: Date;
@@ -99,4 +100,5 @@ export type CartActions = {
   addToCart: (product: Product) => void;
   deleteFromCart: (id: number | string) => void;
   clearCart: () => void;
+  getCartTotal: () => number;
 };

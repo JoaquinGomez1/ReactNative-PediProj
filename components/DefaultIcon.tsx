@@ -10,8 +10,8 @@ interface IconProps {
 
 export default function Icon({ iconName, style }: PropsWithRef<IconProps>) {
   return (
-    <View style={[styles.iconContainer, style]}>
-      <FontAwesome5 style={styles.icon} name={iconName} />
+    <View style={[styles.iconContainer]}>
+      <FontAwesome5 style={[styles.icon, style]} name={iconName} />
     </View>
   );
 }

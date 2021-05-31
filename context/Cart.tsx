@@ -4,13 +4,23 @@ import { CartActions, CartState, Product } from "../types";
 const CartContext = createContext<CartState>(undefined!);
 
 export function CartProvider(props: any) {
-  const [cart, setCart] = useState<Product[] | []>([]);
+  const [cart, setCart] = useState<Product[] | any[]>([]);
   const cartFunctions = useMemo<CartActions>(
     () => ({
-      addToCart: (product) => {
-        const itemIndex = cart.findIndex((each) => each.id === product.id);
+      addToCart: (product: Product) => {
+        const productCopy = { ...product };
+        const itemIndex = cart.findIndex((each) => each.id === productCopy.id);
         const itemDoesNotExists = itemIndex === -1;
-        itemDoesNotExists && setCart((prevCart) => [...prevCart, product]);
+
+        if (itemDoesNotExists) {
+          productCopy.maxUnits = productCopy.units;
+          productCopy.units = 1;
+          setCart((prevCart) => [...prevCart, productCopy]);
+        } else {
+          const cartCopy = [...cart];
+          cartCopy[itemIndex].units += 1;
+          setCart(cartCopy);
+        }
       },
       deleteFromCart: (id) => {
         setCart((prevCart: Product[]) => [
@@ -20,7 +30,16 @@ export function CartProvider(props: any) {
       clearCart: (): void => {
         setCart([]);
       },
+      getCartTotal: () => {
+        // https://github.com/microsoft/TypeScript/issues/36390#issuecomment-641718624
+        // cannot use cart.reduce directly for now
+        return (cart as Product[]).reduce(
+          (acc, { price, units }) => acc + units * price,
+          0
+        );
+      },
     }),
+
     [cart]
   );
 

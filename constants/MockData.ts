@@ -1,6 +1,6 @@
 import { Category, Commerce, Product, User } from "../types";
 
-export const mockProduct = {
+export const mockProduct: Product = {
   img: "https://cdn2.cocinadelirante.com/sites/default/files/images/2020/06/papas-fritas-con-maicena-facil.jpg",
   description:
     "adjashdkajhdkjashkajshdkasjd sadjkhaskjd haskjdhas kdjhaskdjahs dskajhdka sjd\ndjkhaksjdhkajsdaskd\njskdhkjashdkjasdhakdja",
@@ -9,6 +9,16 @@ export const mockProduct = {
   units: 38,
   commerce: 5,
   price: 60,
+};
+
+export const blankProduct: Product = {
+  img: "",
+  description: "",
+  title: "",
+  id: 0,
+  units: 0,
+  commerce: 10,
+  price: 100,
 };
 
 export const mockCommerce: Commerce = {

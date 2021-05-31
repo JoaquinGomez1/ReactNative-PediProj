@@ -1,7 +1,14 @@
-import React, { PropsWithRef, useState } from "react";
-import { StyleProp, StyleSheet, TextInput, ViewStyle } from "react-native";
+import React, { Dispatch, PropsWithRef, SetStateAction, useState } from "react";
+import {
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  ViewStyle,
+} from "react-native";
 import Colors from "../constants/Colors";
-import { mockProduct } from "../constants/MockData";
+import { blankProduct, mockProduct } from "../constants/MockData";
+import { Product } from "../types";
 import MyButton from "./Button";
 import { View } from "./Themed";
 
@@ -9,91 +16,100 @@ interface FormAddProductProps {
   buttonStyle?: StyleProp<ViewStyle>;
   onSubmit?: () => void;
 }
+interface InputTypes {
+  name: keyof Product;
+  textChangeHandler: (text: string) => void;
+  placeholder: string;
+  keyboardType?: "numeric" | undefined;
+}
 
-// TODO: Make an array to map TextInputs
+const allInputs = (
+  currentProductData: Product,
+  setCurrentProductData: Dispatch<SetStateAction<Product>>
+): InputTypes[] => [
+  {
+    name: "title",
+    textChangeHandler: (text) =>
+      setCurrentProductData({ ...currentProductData, title: text }),
+    placeholder: "Titulo",
+  },
+  {
+    name: "description",
+    textChangeHandler: (text) =>
+      setCurrentProductData({ ...currentProductData, description: text }),
+    placeholder: "Descripción",
+  },
+  {
+    name: "img",
+    textChangeHandler: (text) =>
+      setCurrentProductData({ ...currentProductData, img: text }),
+    placeholder: "URL imagen",
+  },
+  {
+    name: "units",
+    textChangeHandler: (text) => {
+      setCurrentProductData({
+        ...currentProductData,
+        units: handleNumericInputs(text)!,
+      });
+    },
+    placeholder: "Unidades",
+    keyboardType: "numeric",
+  },
+  {
+    name: "price",
+    textChangeHandler: (text) => {
+      setCurrentProductData({
+        ...currentProductData,
+        price: handleNumericInputs(text)!,
+      });
+    },
+    placeholder: "Precio",
+    keyboardType: "numeric",
+  },
+  {
+    name: "commerce",
+    textChangeHandler: (text) =>
+      setCurrentProductData({
+        ...currentProductData,
+        commerce: handleNumericInputs(text)!,
+      }),
+    placeholder: "Id de commercio",
+    keyboardType: "numeric",
+  },
+];
+
+const handleNumericInputs = (numberString: string): number | undefined => {
+  try {
+    if (!numberString) return undefined;
+    return Number.parseInt(numberString);
+  } catch (err) {
+    console.log("Something went wrong ", err);
+  }
+};
+
 export default function FormAddProduct({
   buttonStyle,
   onSubmit,
 }: PropsWithRef<FormAddProductProps>) {
-  // ! Keep this component as dumb as posible.
-  // ! This is meant to be exlusively used as a UI Component
-  const [currentProductData, setCurrentProductData] = useState(mockProduct);
-
-  const handleNumericInputs = (numberString: string): number | undefined => {
-    try {
-      if (!numberString) return;
-      return Number.parseInt(numberString);
-    } catch (err) {
-      console.log("Something went wrong ", err);
-    }
-  };
+  const [currentProductData, setCurrentProductData] =
+    useState<Product>(blankProduct);
 
   return (
     <View style={styles.container}>
       <View style={{ width: "100%", paddingHorizontal: 10 }}>
-        <TextInput
-          style={styles.input}
-          placeholder="Titulo"
-          onChangeText={(text) =>
-            setCurrentProductData({ ...currentProductData, title: text })
-          }
-          value={currentProductData?.title}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Descripcion"
-          onChangeText={(text) =>
-            setCurrentProductData({
-              ...currentProductData,
-              description: text,
-            })
-          }
-          value={currentProductData?.description}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="URL Imagen"
-          onChangeText={(text) =>
-            setCurrentProductData({ ...currentProductData, img: text })
-          }
-          value={currentProductData?.img}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Unidades"
-          keyboardType="numeric"
-          onChangeText={(text) =>
-            setCurrentProductData({
-              ...currentProductData,
-              units: handleNumericInputs(text)!,
-            })
-          }
-          value={currentProductData?.units?.toString()} // ! parsing It to string it may or may not cause problems later
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Precio"
-          keyboardType="numeric"
-          onChangeText={(text) =>
-            setCurrentProductData({
-              ...currentProductData,
-              price: handleNumericInputs(text)!,
-            })
-          }
-          value={currentProductData?.price?.toString()}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Comercio"
-          keyboardType="numeric"
-          onChangeText={(text) =>
-            setCurrentProductData({
-              ...currentProductData,
-              commerce: handleNumericInputs(text)!,
-            })
-          }
-          value={currentProductData?.commerce?.toString()}
-        />
+        {allInputs(currentProductData, setCurrentProductData).map(
+          ({ placeholder, name, textChangeHandler, keyboardType }) => (
+            <TextInput
+              key={name}
+              style={styles.input}
+              placeholder={placeholder}
+              onChangeText={textChangeHandler}
+              value={`${currentProductData[name] || ""}`}
+              keyboardType={keyboardType}
+            />
+          )
+        )}
       </View>
       <MyButton title="Agregar" onPress={() => onSubmit} style={buttonStyle} />
       <MyButton

@@ -25,12 +25,13 @@ interface InputTypes {
   key?: keyof LatLng;
 }
 
-const handleNumericInputs = (numberString: string): number | undefined => {
+const handleNumericInputs = (numberString: string): number => {
   try {
-    if (!numberString) return;
+    if (!numberString) return 0;
     return Number.parseInt(numberString);
   } catch (err) {
     console.log("Something went wrong ", err);
+    return 0;
   }
 };
 
@@ -40,17 +41,20 @@ const allInputs = (
 ): InputTypes[] => [
   {
     name: "name",
-    textChangeHandler: (text) => undefined,
+    textChangeHandler: (text) =>
+      setCurrentCommerceData({ ...currentCommerceData, name: text }),
     placeholder: "Nombre",
   },
   {
     name: "description",
-    textChangeHandler: (text) => undefined,
+    textChangeHandler: (text) =>
+      setCurrentCommerceData({ ...currentCommerceData, description: text }),
     placeholder: "Descripción",
   },
   {
     name: "img",
-    textChangeHandler: (text) => undefined,
+    textChangeHandler: (text) =>
+      setCurrentCommerceData({ ...currentCommerceData, img: text }),
     placeholder: "URL imagen",
   },
   {
@@ -58,7 +62,10 @@ const allInputs = (
     textChangeHandler: (text) => {
       setCurrentCommerceData({
         ...currentCommerceData,
-        category: handleNumericInputs(text)!,
+        location: {
+          ...currentCommerceData["location"],
+          longitude: handleNumericInputs(text),
+        },
       });
     },
     placeholder: "Longitud",
@@ -69,7 +76,10 @@ const allInputs = (
     textChangeHandler: (text) => {
       setCurrentCommerceData({
         ...currentCommerceData,
-        category: handleNumericInputs(text)!,
+        location: {
+          ...currentCommerceData["location"],
+          latitude: handleNumericInputs(text),
+        },
       });
     },
     key: "latitude",
@@ -77,7 +87,11 @@ const allInputs = (
   },
   {
     name: "category",
-    textChangeHandler: (text) => undefined,
+    textChangeHandler: (text) =>
+      setCurrentCommerceData({
+        ...currentCommerceData,
+        category: handleNumericInputs(text),
+      }),
     placeholder: "Id de categoría",
   },
 ];
@@ -86,7 +100,8 @@ export default function FormCommerce({
   buttonStyle,
   onSubmit,
 }: PropsWithRef<FormCommerceProps>) {
-  const [currentCommerceData, setCurrentCommerceData] = useState(mockCommerce);
+  const [currentCommerceData, setCurrentCommerceData] =
+    useState<Commerce>(mockCommerce);
 
   return (
     <View style={styles.container}>
@@ -100,8 +115,8 @@ export default function FormCommerce({
               onChangeText={textChangeHandler}
               value={
                 name === "location"
-                  ? currentCommerceData[name][key!].toString()
-                  : currentCommerceData[name].toString()
+                  ? `${currentCommerceData[name][key!]}`
+                  : `${currentCommerceData[name]}`
               }
             />
           )

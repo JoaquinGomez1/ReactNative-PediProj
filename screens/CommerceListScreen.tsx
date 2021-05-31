@@ -9,6 +9,7 @@ import Commerce from "../components/Commerce";
 import SearchBar from "../components/SearchBar";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import Layout from "../constants/Layout";
 import { commerceList as initialData } from "../constants/MockData";
 import useCategories from "../hooks/useCategories";
 import { Category as CategoryType, Commerce as CommerceType } from "../types";
@@ -40,14 +41,19 @@ export default function CommerceListScreen({
 
   const handleTextChanged = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = initialData.filter((each) => regex.test(each.name));
+    const filteredList = initialData.filter((each) =>
+      selectedCategory
+        ? regex.test(each.name) && each.category === selectedCategory
+        : regex.test(each.name)
+    );
 
-    const encontradoEnLocal = filteredList.length >= 1;
-    if (encontradoEnLocal) setCommerceList(filteredList);
+    const foundOnLocalData = filteredList.length >= 1;
+    if (foundOnLocalData) setCommerceList(filteredList);
     else {
-      const resultHttp: [] = [];
+      // If the shop wasn't found on local data. make a request to the server
+      const resultHttp: any[] = [];
       setCommerceList(resultHttp);
-    } // Buscar en base de datos
+    }
   };
 
   const handleNavigation = (commerce: CommerceType | undefined) => {
@@ -135,6 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 100,
     flex: 1,
+    paddingHorizontal: Layout.spacing[4],
   },
   header: {
     alignItems: "center",
