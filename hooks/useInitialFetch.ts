@@ -17,6 +17,7 @@ export default function useInitialFetch(URL: string) {
       setData(res);
 
       alert(res);
+      console.log(res);
       setIsLoading(false);
     } catch (err) {
       alert(err);

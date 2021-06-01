@@ -6,6 +6,7 @@ import ProductComponent from "../components/Product";
 import { useCart } from "../context/Cart";
 import MyButton from "../components/Button";
 import Colors from "../constants/Colors";
+import Layout from "../constants/Layout";
 
 const PRODUCT_HEIGHT = 300;
 
@@ -41,6 +42,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         style={{
           width: "100%",
           paddingHorizontal: 20,
+          paddingVertical: 10,
           borderColor: Colors.colors.gray[200],
           borderTopWidth: 1,
         }}
@@ -77,6 +79,7 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 8,
     height: PRODUCT_HEIGHT,
+    paddingHorizontal: Layout.spacing[1],
   },
   total: {
     fontSize: 18,
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[600],
   },
   quantity: {
-    textAlign: "left",
+    textAlign: "center",
     fontSize: 16,
     color: Colors.colors.gray[600],
   },

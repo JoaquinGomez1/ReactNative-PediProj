@@ -6,6 +6,7 @@ import { Product as ProdType } from "../types";
 import ProductImage from "../components/ProductImage";
 import Animated, { EasingNode } from "react-native-reanimated";
 import GestureRecognizer from "react-native-swipe-gestures";
+import Layout from "../constants/Layout";
 
 type ProductProps = {
   product: ProdType;
@@ -104,7 +105,7 @@ export default function Product(props: ProductProps) {
             <Text style={styles.price}>${product?.price || "$360.00"}.00</Text>
           </View>
         </TouchableOpacity>
-        <View>{props.children}</View>
+        <View style={{ width: "100%" }}>{props.children}</View>
       </Animated.View>
     </GestureRecognizer>
   );

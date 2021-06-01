@@ -7,7 +7,6 @@ import {
   ViewStyle,
 } from "react-native";
 import Colors from "../constants/Colors";
-import { mockCommerce } from "../constants/MockData";
 import MyButton from "./Button";
 import { View } from "./Themed";
 import { Commerce } from "../types";
@@ -16,6 +15,7 @@ import { LatLng } from "react-native-maps";
 interface FormCommerceProps {
   buttonStyle?: StyleProp<ViewStyle>;
   onSubmit?: () => void;
+  commerceData?: Commerce;
 }
 
 interface InputTypes {
@@ -36,37 +36,44 @@ const handleNumericInputs = (numberString: string): number => {
 };
 
 const allInputs = (
-  currentCommerceData: Commerce,
-  setCurrentCommerceData: React.Dispatch<React.SetStateAction<Commerce>>
+  currentCommerceData: Commerce | undefined,
+  setCurrentCommerceData: React.Dispatch<
+    React.SetStateAction<Commerce | undefined>
+  >
 ): InputTypes[] => [
+  // Check if currentCommerceData is not undefined on every handler
   {
     name: "name",
     textChangeHandler: (text) =>
+      currentCommerceData &&
       setCurrentCommerceData({ ...currentCommerceData, name: text }),
     placeholder: "Nombre",
   },
   {
     name: "description",
     textChangeHandler: (text) =>
+      currentCommerceData &&
       setCurrentCommerceData({ ...currentCommerceData, description: text }),
     placeholder: "Descripción",
   },
   {
     name: "img",
     textChangeHandler: (text) =>
+      currentCommerceData &&
       setCurrentCommerceData({ ...currentCommerceData, img: text }),
     placeholder: "URL imagen",
   },
   {
     name: "location",
     textChangeHandler: (text) => {
-      setCurrentCommerceData({
-        ...currentCommerceData,
-        location: {
-          ...currentCommerceData["location"],
-          longitude: handleNumericInputs(text),
-        },
-      });
+      currentCommerceData &&
+        setCurrentCommerceData({
+          ...currentCommerceData,
+          location: {
+            ...currentCommerceData["location"],
+            longitude: handleNumericInputs(text),
+          },
+        });
     },
     placeholder: "Longitud",
     key: "longitude",
@@ -74,13 +81,14 @@ const allInputs = (
   {
     name: "location",
     textChangeHandler: (text) => {
-      setCurrentCommerceData({
-        ...currentCommerceData,
-        location: {
-          ...currentCommerceData["location"],
-          latitude: handleNumericInputs(text),
-        },
-      });
+      currentCommerceData &&
+        setCurrentCommerceData({
+          ...currentCommerceData,
+          location: {
+            ...currentCommerceData["location"],
+            latitude: handleNumericInputs(text),
+          },
+        });
     },
     key: "latitude",
     placeholder: "Latitud",
@@ -88,6 +96,7 @@ const allInputs = (
   {
     name: "category",
     textChangeHandler: (text) =>
+      currentCommerceData &&
       setCurrentCommerceData({
         ...currentCommerceData,
         category: handleNumericInputs(text),
@@ -99,9 +108,10 @@ const allInputs = (
 export default function FormCommerce({
   buttonStyle,
   onSubmit,
+  commerceData,
 }: PropsWithRef<FormCommerceProps>) {
   const [currentCommerceData, setCurrentCommerceData] =
-    useState<Commerce>(mockCommerce);
+    useState<Commerce | undefined>(commerceData);
 
   return (
     <View style={styles.container}>
@@ -115,8 +125,10 @@ export default function FormCommerce({
               onChangeText={textChangeHandler}
               value={
                 name === "location"
-                  ? `${currentCommerceData[name][key!]}`
-                  : `${currentCommerceData[name]}`
+                  ? `${
+                      currentCommerceData ? currentCommerceData[name][key!] : ""
+                    }`
+                  : `${currentCommerceData ? currentCommerceData[name] : ""}`
               }
             />
           )

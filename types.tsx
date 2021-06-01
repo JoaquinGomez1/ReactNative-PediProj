@@ -102,3 +102,15 @@ export type CartActions = {
   clearCart: () => void;
   getCartTotal: () => number;
 };
+
+export type ProductActions = {
+  addProduct: (product: Product) => void;
+  deleteProduct: (product: Product) => void;
+  deleteProductById: (id: number | string) => void;
+  updateProduct: (product: Product) => void;
+};
+
+export type ProductsState = {
+  productsList: Product[];
+  productsFunctions: ProductActions;
+};

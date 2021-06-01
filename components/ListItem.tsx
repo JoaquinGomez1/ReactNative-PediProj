@@ -1,7 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Text, View } from "./Themed";
-import { mockProduct } from "../constants/MockData";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 
@@ -9,8 +8,8 @@ interface Item {
   id: string | number;
   img: string;
   title: string | number;
-  subtitle: string | number;
-  body: string | number;
+  subtitle?: string | number;
+  body?: string | number;
 }
 
 interface ListItemProps {
@@ -26,14 +25,14 @@ export default function ListItem({
       <View style={styles.flex}>
         <Image
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
           source={{ uri: item.img }}
         />
         <View>
           <Text style={styles.small}>Id: {item.id}</Text>
           <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.subtitle}>${item.subtitle}.00</Text>
-          <Text style={{ position: "absolute", bottom: 0 }}>X{item.body}</Text>
+          <Text style={styles.subtitle}>{item.subtitle}</Text>
+          <Text style={{ position: "absolute", bottom: 0 }}>{item.body}</Text>
         </View>
         <View style={styles.actionsContainer}>{children}</View>
       </View>
@@ -43,6 +42,7 @@ export default function ListItem({
 
 const styles = StyleSheet.create({
   container: {
+    paddingHorizontal: Layout.spacing[1],
     borderWidth: 1,
     borderColor: Colors.colors.gray[200],
     borderRadius: 5,
@@ -57,12 +57,13 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     marginVertical: 5,
     elevation: 3,
+    width: "100%",
   },
   flex: {
     flexDirection: "row",
   },
   image: {
-    height: 80,
+    height: 100,
     width: 90,
     marginRight: Layout.spacing[1],
   },
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
   },
-  small: { fontSize: 11 },
+  small: { fontSize: 12 },
   actionsContainer: {
     position: "absolute",
     right: 0,

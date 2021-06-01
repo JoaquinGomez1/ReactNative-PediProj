@@ -1,20 +1,15 @@
 import React, { Dispatch, PropsWithRef, SetStateAction, useState } from "react";
-import {
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  TextInput,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, StyleSheet, TextInput, ViewStyle } from "react-native";
 import Colors from "../constants/Colors";
-import { blankProduct, mockProduct } from "../constants/MockData";
+import Layout from "../constants/Layout";
 import { Product } from "../types";
 import MyButton from "./Button";
 import { View } from "./Themed";
 
 interface FormAddProductProps {
   buttonStyle?: StyleProp<ViewStyle>;
-  onSubmit?: () => void;
+  onSubmit: () => void;
+  productData: Product;
 }
 interface InputTypes {
   name: keyof Product;
@@ -91,13 +86,14 @@ const handleNumericInputs = (numberString: string): number | undefined => {
 export default function FormAddProduct({
   buttonStyle,
   onSubmit,
+  productData,
 }: PropsWithRef<FormAddProductProps>) {
   const [currentProductData, setCurrentProductData] =
-    useState<Product>(blankProduct);
+    useState<Product>(productData);
 
   return (
     <View style={styles.container}>
-      <View style={{ width: "100%", paddingHorizontal: 10 }}>
+      <View style={{ width: "100%" }}>
         {allInputs(currentProductData, setCurrentProductData).map(
           ({ placeholder, name, textChangeHandler, keyboardType }) => (
             <TextInput
@@ -105,13 +101,13 @@ export default function FormAddProduct({
               style={styles.input}
               placeholder={placeholder}
               onChangeText={textChangeHandler}
-              value={`${currentProductData[name] || ""}`}
+              value={`${currentProductData[name]}`}
               keyboardType={keyboardType}
             />
           )
         )}
       </View>
-      <MyButton title="Agregar" onPress={() => onSubmit} style={buttonStyle} />
+      <MyButton title="Agregar" onPress={onSubmit} style={buttonStyle} />
       <MyButton
         title="Ver JSON Data"
         onPress={() => alert(JSON.stringify(currentProductData, null, 4))}
@@ -151,7 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "100%",
     height: 40,
-    marginVertical: 10,
+    marginVertical: Layout.spacing[1],
     borderWidth: 1,
     borderColor: Colors.colors.gray[300],
   },

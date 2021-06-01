@@ -17,8 +17,8 @@ export const blankProduct: Product = {
   title: "",
   id: 0,
   units: 0,
-  commerce: 10,
-  price: 100,
+  commerce: 0,
+  price: 0,
 };
 
 export const mockCommerce: Commerce = {

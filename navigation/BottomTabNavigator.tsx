@@ -21,7 +21,8 @@ import CommerceDetailScreen from "../screens/CommerceDetailScreen";
 import AdminPanelScreen from "../screens/AdminPanelScreen";
 import ManageProductsScreen from "../screens/ManageProductScreen";
 import ManageCommercesScreen from "../screens/ManageCommerceScreen";
-import ProductListScreen from "../screens/ManageProductScreen/ProductListScreen";
+import AddProductScreen from "../screens/ManageProductScreen/AddProductScreen";
+import AddCommerceScreen from "../screens/ManageCommerceScreen/AddCommerceScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -32,7 +33,7 @@ type NavigatorArrayContent = {
   auth?: boolean;
 };
 
-const authNavigators: Array<NavigatorArrayContent> = [
+const appNavigators: Array<NavigatorArrayContent> = [
   { name: "Home", component: HomeNavigator, iconName: "home", auth: true },
   {
     name: "Comercios",
@@ -75,7 +76,7 @@ export default function BottomTabNavigator() {
           component={LoadingScreen}
         />
       ) : (
-        authNavigators?.map(
+        appNavigators?.map(
           ({ name, component, iconName, auth }) =>
             isLoggedIn === auth && (
               <BottomTab.Screen
@@ -209,9 +210,14 @@ function UserNavigator() {
       />
 
       <UserStack.Screen
-        name="EditProducts"
-        options={{ headerShown: true, title: "Editar o Eliminar Productos" }}
-        component={ProductListScreen}
+        name="AddProduct"
+        options={{ headerShown: true, title: "Agregar Producto" }}
+        component={AddProductScreen}
+      />
+      <UserStack.Screen
+        name="AddCommerce"
+        options={{ headerShown: true, title: "Agregar Comercio" }}
+        component={AddCommerceScreen}
       />
 
       <UserStack.Screen

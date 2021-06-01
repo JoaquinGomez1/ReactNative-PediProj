@@ -20,7 +20,10 @@ export default function Commerce({
   return (
     <View {...rest} style={styles.container}>
       <TouchableOpacity style={styles.pressableArea} onPress={handleNavigation}>
-        <ProductImage source={{ uri: category?.img }} />
+        <ProductImage
+          source={{ uri: category?.img }}
+          style={{ resizeMode: "cover" }}
+        />
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{category?.name || "Category"}</Text>
@@ -44,13 +47,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors["light"].text,
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
   },
   titleContainer: {
     backgroundColor: "#f3f4f6",
     padding: 12,
-    height: 40,
+    height: 50,
     width: "100%",
   },
   pressableArea: {

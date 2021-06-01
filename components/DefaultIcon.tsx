@@ -1,11 +1,17 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { PropsWithRef } from "react";
-import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import Colors from "../constants/Colors";
 
 interface IconProps {
   iconName: string;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 export default function Icon({ iconName, style }: PropsWithRef<IconProps>) {
@@ -18,11 +24,8 @@ export default function Icon({ iconName, style }: PropsWithRef<IconProps>) {
 
 const styles = StyleSheet.create({
   iconContainer: {
-    width: 32,
-    height: 32,
     backgroundColor: "transparent",
     alignItems: "center",
-    borderRadius: 50,
   },
   icon: {
     fontSize: 22,

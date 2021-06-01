@@ -13,21 +13,26 @@ import SearchBar from "../components/SearchBar";
 import UserContext from "../context/User";
 import CurrentUserAvatar from "../components/CurrentUserAvatar";
 import useInitialFetch from "../hooks/useInitialFetch";
-import { Product as ProductType } from "../types";
 import Loader from "../components/Loader";
 import Layout from "../constants/Layout";
+import { useProducts } from "../context/Products";
 
 export default function TabOneScreen({ navigation, route }: any) {
   const { cartFunctions } = useContext<CartState>(cartContext);
   const { currentUser } = useContext(UserContext);
-  //const { data, isLoading } = useInitialFetch("/products");
-  const [productList, setProductList] = useState<ProductType[]>(initialData);
+  // const { data, isLoading } = useInitialFetch("/products");
+  const { productsList } = useProducts();
+  const [localProductList, setLocalProductList] = useState(initialData);
 
   const handleSearchTextChange = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = initialData.filter((each) => regex.test(each.title));
-    setProductList(filteredList);
+    const filteredList = productsList.filter((each) => regex.test(each.title));
+    setLocalProductList(filteredList);
   };
+
+  // React.useEffect(() => {
+  //   setLocalProductList(productsList);
+  // }, [productsList]);
 
   return (
     <View style={styles.pageContainer}>
@@ -59,10 +64,10 @@ export default function TabOneScreen({ navigation, route }: any) {
               justifyContent: "center",
             }}
           >
-            {productList?.length <= 0 ? (
+            {localProductList?.length <= 0 ? (
               <Text style={styles.notFound}>No se encontraron productos</Text>
             ) : (
-              productList?.map((each) => (
+              localProductList?.map((each) => (
                 <Product
                   navigation={navigation}
                   product={each}
@@ -71,6 +76,7 @@ export default function TabOneScreen({ navigation, route }: any) {
                   route={route}
                 >
                   <MyButton
+                    style={{ width: "100%" }}
                     title="Agregar a carrito"
                     onPress={() => cartFunctions.addToCart(each)}
                   />

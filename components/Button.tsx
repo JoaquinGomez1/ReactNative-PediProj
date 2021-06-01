@@ -15,7 +15,7 @@ import { Text } from "./Themed";
 interface MyButtonProps {
   style?: StyleProp<ViewStyle>;
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
   altStyle?: boolean;
   disabled?: boolean;
 }

@@ -21,19 +21,6 @@ export function UserProvider(props: any) {
           alert(err);
         }
       },
-      loginWithFirebase: () => {
-        const googleUser = firebase.auth().currentUser;
-        if (googleUser) {
-          // setCurrentUser(googleUser);
-          console.log(googleUser);
-        } else {
-          console.log(
-            "GOOGLE FIREBASE: No google user logged in: ",
-            googleUser
-          );
-          return;
-        }
-      },
       logout: () => {
         firebase.auth().signOut();
         setCurrentUser({});

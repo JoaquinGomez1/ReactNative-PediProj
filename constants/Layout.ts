@@ -10,7 +10,7 @@ export default {
   },
   isSmallDevice: width < 375,
   spacing: {
-    // For consisten spacing trough out the entire app
+    // For consistent spacing troughout the entire app
     initial: 16,
     safeAreaNotch: 40,
     1: 8,

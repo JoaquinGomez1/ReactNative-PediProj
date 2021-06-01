@@ -5,25 +5,24 @@ import Colors from "../../constants/Colors";
 import ListItem from "../../components/ListItem";
 import { Text, View } from "../../components/Themed";
 import TouchableIcon from "../../components/TouchableIcon";
-import { Product } from "../../types";
-import ProductForm from "../../components/FormAddProduct";
+import { Commerce } from "../../types";
 import Layout from "../../constants/Layout";
-import { useProducts } from "../../context/Products";
 import Icon from "../../components/DefaultIcon";
+import { commerceList } from "../../constants/MockData";
+import FormCommerce from "../../components/FormCommerce";
 import IconButton from "../../components/IconButton";
 
-export default function ProductListScreen({ navigation }: any) {
-  const { productsList, productsFunctions } = useProducts();
+export default function ManageCommerceScreen({ navigation }: any) {
   const [selectedProductId, setSelectedProductId] =
     useState<number | string | undefined>();
 
   const [showAddButton, setShowAddButton] = useState(true);
-  const [selectedProductData, setSelectedProductData] =
-    useState<Product | undefined>();
+  const [selectedCommerceData, setselectedCommerceData] =
+    useState<Commerce | undefined>();
 
   useEffect(() => {
-    const selected = productsList.find((each) => each.id === selectedProductId);
-    setSelectedProductData(selected);
+    const selected = commerceList.find((each) => each.id === selectedProductId);
+    setselectedCommerceData(selected);
     if (selectedProductId) {
       setShowAddButton(false);
     } else {
@@ -33,29 +32,21 @@ export default function ProductListScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      {!selectedProductData && (
+      {!selectedCommerceData && (
         <FlatList
-          data={productsList}
+          data={commerceList}
           keyExtractor={(item) => `${item.id}`}
           style={{ width: "100%" }}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: { title, img, units, price, id } }) => (
-            <ListItem
-              item={{
-                title,
-                id,
-                img,
-                subtitle: `$${price}.00`,
-                body: `X${units}`,
-              }}
-            >
+          renderItem={({ item: { name, img, id } }) => (
+            <ListItem item={{ title: name, id, img }}>
               <TouchableIcon
                 onPress={() => setSelectedProductId(id)}
                 iconName="edit"
                 style={{ color: Colors.colors.gray[400] }}
               />
               <TouchableIcon
-                onPress={() => productsFunctions.deleteProductById(id)}
+                onPress={() => undefined}
                 iconName="trash"
                 style={{
                   color: Colors.colors.red[600],
@@ -67,7 +58,7 @@ export default function ProductListScreen({ navigation }: any) {
         />
       )}
 
-      {selectedProductData && (
+      {selectedCommerceData && (
         <View style={{ width: "100%" }}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: "row" }}>
@@ -77,12 +68,12 @@ export default function ProductListScreen({ navigation }: any) {
                 onPress={() => setSelectedProductId(undefined)}
               />
               <Text style={{ marginLeft: 50, fontSize: 16 }}>
-                Editar: {selectedProductData?.title}
+                Editar: {selectedCommerceData?.name}
               </Text>
             </View>
-            <ProductForm
+            <FormCommerce
               onSubmit={() => undefined}
-              productData={selectedProductData}
+              commerceData={selectedCommerceData}
             />
           </ScrollView>
         </View>
@@ -94,8 +85,8 @@ export default function ProductListScreen({ navigation }: any) {
           textStyle={styles.addButtonText}
           iconStyle={styles.iconStyle}
           iconName="plus"
-          displayText="Agregar Producto"
-          onPress={() => navigation.push("AddProduct")}
+          displayText="Agregar Comercio"
+          onPress={() => navigation.push("AddCommerce")}
         />
       )}
     </View>
@@ -112,13 +103,13 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {},
   addButton: {
-    backgroundColor: Colors.colors.red[400],
-    borderColor: Colors.colors.red[600],
+    backgroundColor: Colors.colors.green[200],
+    borderColor: Colors.colors.green[300],
   },
   addButtonText: {
-    color: Colors.colors.gray[600],
+    color: Colors.colors.green[600],
   },
   iconStyle: {
-    color: Colors.colors.red[600],
+    color: Colors.colors.green[600],
   },
 });
