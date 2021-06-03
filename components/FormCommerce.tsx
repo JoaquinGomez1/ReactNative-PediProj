@@ -16,6 +16,7 @@ interface FormCommerceProps {
   buttonStyle?: StyleProp<ViewStyle>;
   onSubmit?: () => void;
   commerceData?: Commerce;
+  buttonDisabled?: boolean;
 }
 
 interface InputTypes {
@@ -23,12 +24,13 @@ interface InputTypes {
   textChangeHandler: (text: string) => void;
   placeholder: string;
   key?: keyof LatLng;
+  keyboard?: "numeric";
 }
 
 const handleNumericInputs = (numberString: string): number => {
   try {
-    if (!numberString) return 0;
-    return Number.parseInt(numberString);
+    if (!numberString || isNaN(Number.parseInt(numberString))) return 0;
+    return Number.parseFloat(numberString);
   } catch (err) {
     console.log("Something went wrong ", err);
     return 0;
@@ -64,34 +66,30 @@ const allInputs = (
     placeholder: "URL imagen",
   },
   {
-    name: "location",
+    name: "longitude",
     textChangeHandler: (text) => {
       currentCommerceData &&
         setCurrentCommerceData({
           ...currentCommerceData,
-          location: {
-            ...currentCommerceData["location"],
-            longitude: handleNumericInputs(text),
-          },
+          longitude: handleNumericInputs(text),
         });
     },
     placeholder: "Longitud",
     key: "longitude",
+    keyboard: "numeric",
   },
   {
-    name: "location",
+    name: "latitude",
     textChangeHandler: (text) => {
       currentCommerceData &&
         setCurrentCommerceData({
           ...currentCommerceData,
-          location: {
-            ...currentCommerceData["location"],
-            latitude: handleNumericInputs(text),
-          },
+          latitude: handleNumericInputs(text),
         });
     },
     key: "latitude",
     placeholder: "Latitud",
+    keyboard: "numeric",
   },
   {
     name: "category",
@@ -102,6 +100,7 @@ const allInputs = (
         category: handleNumericInputs(text),
       }),
     placeholder: "Id de categoría",
+    keyboard: "numeric",
   },
 ];
 
@@ -109,6 +108,7 @@ export default function FormCommerce({
   buttonStyle,
   onSubmit,
   commerceData,
+  buttonDisabled,
 }: PropsWithRef<FormCommerceProps>) {
   const [currentCommerceData, setCurrentCommerceData] =
     useState<Commerce | undefined>(commerceData);
@@ -117,24 +117,27 @@ export default function FormCommerce({
     <View style={styles.container}>
       <ScrollView style={{ width: "100%", paddingHorizontal: 10 }}>
         {allInputs(currentCommerceData, setCurrentCommerceData).map(
-          ({ placeholder, name, textChangeHandler, key }) => (
-            <TextInput
-              key={placeholder}
-              style={styles.input}
-              placeholder={placeholder}
-              onChangeText={textChangeHandler}
-              value={
-                name === "location"
-                  ? `${
-                      currentCommerceData ? currentCommerceData[name][key!] : ""
-                    }`
-                  : `${currentCommerceData ? currentCommerceData[name] : ""}`
-              }
-            />
-          )
+          ({ placeholder, name, textChangeHandler, key, keyboard }) => {
+            const isDescription = name === "description";
+            return (
+              <TextInput
+                key={placeholder}
+                style={styles.input}
+                numberOfLines={isDescription ? 4 : 1}
+                placeholder={placeholder}
+                onChangeText={textChangeHandler}
+                multiline={isDescription}
+                keyboardType={keyboard}
+                value={`${
+                  currentCommerceData ? currentCommerceData[name] : ""
+                }`}
+              />
+            );
+          }
         )}
       </ScrollView>
       <MyButton
+        disabled={buttonDisabled ? buttonDisabled : false}
         title="Agregar"
         onPress={() => onSubmit && onSubmit()}
         style={buttonStyle}
@@ -176,8 +179,9 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 10,
     borderRadius: 8,
+    minHeight: 40,
+    maxHeight: 40 * 3,
     width: "100%",
-    height: 40,
     marginVertical: 10,
     borderWidth: 1,
     borderColor: Colors.colors.gray[300],

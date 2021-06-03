@@ -1,18 +1,17 @@
-import React, { useContext, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import { Product as ProdType } from "../types";
 import ProductImage from "../components/ProductImage";
 import Animated, { EasingNode } from "react-native-reanimated";
 import GestureRecognizer from "react-native-swipe-gestures";
-import Layout from "../constants/Layout";
 
 type ProductProps = {
   product: ProdType;
   navigation?: any;
   route?: any;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   [x: string]: any;
@@ -105,7 +104,7 @@ export default function Product(props: ProductProps) {
             <Text style={styles.price}>${product?.price || "$360.00"}.00</Text>
           </View>
         </TouchableOpacity>
-        <View style={{ width: "100%" }}>{props.children}</View>
+        <View>{props.children}</View>
       </Animated.View>
     </GestureRecognizer>
   );
@@ -130,9 +129,8 @@ const styles = StyleSheet.create({
     width: "100%",
     minWidth: 260,
     height: 330,
-    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 6,
-    overflow: "hidden",
     borderWidth: 1,
     borderColor: Colors.colors.borders,
     marginVertical: 8,

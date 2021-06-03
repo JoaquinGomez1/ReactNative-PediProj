@@ -40,7 +40,12 @@ export default function CommerceDetailScreen({
       </View>
       <View style={styles.mapContainer}>
         <Map>
-          <Marker coordinate={commerce.location} />
+          <Marker
+            coordinate={{
+              latitude: commerce?.latitude,
+              longitude: commerce?.longitude,
+            }}
+          />
         </Map>
       </View>
     </View>

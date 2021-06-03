@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
 import ListItem from "../../components/ListItem";
 import { Text, View } from "../../components/Themed";
@@ -9,19 +9,21 @@ import { Product } from "../../types";
 import ProductForm from "../../components/FormAddProduct";
 import Layout from "../../constants/Layout";
 import { useProducts } from "../../context/Products";
-import Icon from "../../components/DefaultIcon";
 import IconButton from "../../components/IconButton";
+import { BASE_URL } from "../../constants/Common";
 
 export default function ProductListScreen({ navigation }: any) {
   const { productsList, productsFunctions } = useProducts();
   const [selectedProductId, setSelectedProductId] =
     useState<number | string | undefined>();
+  const [requestStarted, setRequestStarted] = useState<boolean>(false);
 
   const [showAddButton, setShowAddButton] = useState(true);
   const [selectedProductData, setSelectedProductData] =
     useState<Product | undefined>();
 
   useEffect(() => {
+    // Sets selected data and toggles Add button
     const selected = productsList.find((each) => each.id === selectedProductId);
     setSelectedProductData(selected);
     if (selectedProductId) {
@@ -30,6 +32,24 @@ export default function ProductListScreen({ navigation }: any) {
       setShowAddButton(true);
     }
   }, [selectedProductId]);
+
+  const handleSubmit = async (editedProduct: Product) => {
+    // Edited product gets passed by the FormProduct component
+    setRequestStarted(true);
+    const req = await fetch(BASE_URL + "/products", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editedProduct),
+    });
+    console.log(JSON.stringify(editedProduct));
+
+    if (req.status === 200) {
+      alert("Producto actualizado correctamente");
+    }
+    setRequestStarted(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -81,7 +101,9 @@ export default function ProductListScreen({ navigation }: any) {
               </Text>
             </View>
             <ProductForm
-              onSubmit={() => undefined}
+              buttonDisabled={requestStarted}
+              buttonTitle={requestStarted ? "Procesando..." : "Editar producto"}
+              onSubmit={handleSubmit}
               productData={selectedProductData}
             />
           </ScrollView>
@@ -94,7 +116,7 @@ export default function ProductListScreen({ navigation }: any) {
           textStyle={styles.addButtonText}
           iconStyle={styles.iconStyle}
           iconName="plus"
-          displayText="Agregar Producto"
+          displayText={"Agregar Producto"}
           onPress={() => navigation.push("AddProduct")}
         />
       )}
@@ -112,13 +134,13 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {},
   addButton: {
-    backgroundColor: Colors.colors.red[400],
-    borderColor: Colors.colors.red[600],
+    backgroundColor: Colors.colors.green[100],
+    borderColor: Colors.colors.green[400],
   },
   addButtonText: {
-    color: Colors.colors.gray[600],
+    color: Colors.colors.green[600],
   },
   iconStyle: {
-    color: Colors.colors.red[600],
+    color: Colors.colors.green[600],
   },
 });

@@ -8,8 +8,10 @@ import { View } from "./Themed";
 
 interface FormAddProductProps {
   buttonStyle?: StyleProp<ViewStyle>;
-  onSubmit: () => void;
+  onSubmit: (productData: Product) => void;
   productData: Product;
+  buttonDisabled?: boolean;
+  buttonTitle: string;
 }
 interface InputTypes {
   name: keyof Product;
@@ -74,12 +76,13 @@ const allInputs = (
   },
 ];
 
-const handleNumericInputs = (numberString: string): number | undefined => {
+const handleNumericInputs = (numberString: string): number => {
   try {
-    if (!numberString) return undefined;
+    if (!numberString || isNaN(Number.parseInt(numberString))) return 0;
     return Number.parseInt(numberString);
   } catch (err) {
     console.log("Something went wrong ", err);
+    return 0;
   }
 };
 
@@ -87,6 +90,8 @@ export default function FormAddProduct({
   buttonStyle,
   onSubmit,
   productData,
+  buttonDisabled,
+  buttonTitle,
 }: PropsWithRef<FormAddProductProps>) {
   const [currentProductData, setCurrentProductData] =
     useState<Product>(productData);
@@ -107,7 +112,12 @@ export default function FormAddProduct({
           )
         )}
       </View>
-      <MyButton title="Agregar" onPress={onSubmit} style={buttonStyle} />
+      <MyButton
+        title={buttonTitle}
+        disabled={buttonDisabled}
+        onPress={() => onSubmit(currentProductData)}
+        style={buttonStyle}
+      />
       <MyButton
         title="Ver JSON Data"
         onPress={() => alert(JSON.stringify(currentProductData, null, 4))}

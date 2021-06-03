@@ -8,11 +8,12 @@ import TouchableIcon from "../../components/TouchableIcon";
 import { Commerce } from "../../types";
 import Layout from "../../constants/Layout";
 import Icon from "../../components/DefaultIcon";
-import { commerceList } from "../../constants/MockData";
 import FormCommerce from "../../components/FormCommerce";
 import IconButton from "../../components/IconButton";
+import { useCommercesProvider } from "../../context/Commerces";
 
 export default function ManageCommerceScreen({ navigation }: any) {
+  const { commerceList } = useCommercesProvider();
   const [selectedProductId, setSelectedProductId] =
     useState<number | string | undefined>();
 
@@ -103,8 +104,8 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {},
   addButton: {
-    backgroundColor: Colors.colors.green[200],
-    borderColor: Colors.colors.green[300],
+    backgroundColor: Colors.colors.green[100],
+    borderColor: Colors.colors.green[400],
   },
   addButtonText: {
     color: Colors.colors.green[600],

@@ -1,6 +1,6 @@
 import { RouteProp, useFocusEffect } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Badge from "../components/Badge";
@@ -10,8 +10,9 @@ import SearchBar from "../components/SearchBar";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
-import { commerceList as initialData } from "../constants/MockData";
+import { useCommercesProvider } from "../context/Commerces";
 import useCategories from "../hooks/useCategories";
+import useCommerces from "../hooks/useCommerce";
 import { Category as CategoryType, Commerce as CommerceType } from "../types";
 
 type CategoriesNavigationProps = StackNavigationProp<any, any>;
@@ -24,8 +25,13 @@ interface CommerceDetailScreen {
 export default function CommerceListScreen({
   navigation,
 }: React.PropsWithRef<CommerceDetailScreen>) {
-  const [commerceList, setCommerceList] =
+  const { commerceList: initialData } = useCommercesProvider();
+  const [localCommercesList, setLocalCommercesList] =
     useState<CommerceType[] | []>(initialData);
+
+  useEffect(() => {
+    setLocalCommercesList(initialData);
+  }, [initialData]);
 
   const [selectedCategory, setSelectedCategory] =
     useState<number | string | undefined>();
@@ -34,7 +40,7 @@ export default function CommerceListScreen({
 
   useFocusEffect(
     useCallback(() => {
-      setCommerceList(initialData);
+      setLocalCommercesList(initialData);
       setSelectedCategory(undefined);
     }, [])
   );
@@ -48,11 +54,11 @@ export default function CommerceListScreen({
     );
 
     const foundOnLocalData = filteredList.length >= 1;
-    if (foundOnLocalData) setCommerceList(filteredList);
+    if (foundOnLocalData) setLocalCommercesList(filteredList);
     else {
       // If the shop wasn't found on local data. make a request to the server
       const resultHttp: any[] = [];
-      setCommerceList(resultHttp);
+      setLocalCommercesList(resultHttp);
     }
   };
 
@@ -63,14 +69,14 @@ export default function CommerceListScreen({
   const handleBadgePress = (id: string | number) => {
     const isCategorySelected = id === selectedCategory;
     if (isCategorySelected) {
-      setCommerceList(initialData);
+      setLocalCommercesList(initialData);
       setSelectedCategory(undefined);
       return;
     }
     const filteredCommerces = initialData.filter(
       (each) => each.category === id
     );
-    setCommerceList(filteredCommerces);
+    setLocalCommercesList(filteredCommerces);
     setSelectedCategory(id);
   };
 
@@ -119,7 +125,7 @@ export default function CommerceListScreen({
       <View>
         <FlatList
           contentContainerStyle={styles.list}
-          data={commerceList}
+          data={localCommercesList}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           keyExtractor={({ id }) => `${id}`}

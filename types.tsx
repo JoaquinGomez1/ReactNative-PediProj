@@ -57,7 +57,8 @@ export type Commerce = {
   name: string;
   description: string;
   img: string;
-  location: LatLng;
+  longitude: number;
+  latitude: number;
   category: Category["id"];
 };
 
@@ -113,4 +114,18 @@ export type ProductActions = {
 export type ProductsState = {
   productsList: Product[];
   productsFunctions: ProductActions;
+  isLoading: boolean;
+};
+
+export type CommercesState = {
+  commerceList: Commerce[];
+  commercesFunctions: CommercesActions;
+  isLoading: boolean;
+};
+
+export type CommercesActions = {
+  addCommerce: (commerce: Product) => void;
+  deleteCommerce: (commerce: Product) => void;
+  deleteCommerceById: (commerceId: number | string) => void;
+  updateCommerce: (commerce: Product) => void;
 };

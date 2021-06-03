@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "../../components/Themed";
-import MyButton from "../../components/Button";
 import ProductForm from "../../components/FormAddProduct";
-import TouchableIcon from "../../components/TouchableIcon";
 import { blankProduct } from "../../constants/MockData";
 import Layout from "../../constants/Layout";
+import { BASE_URL } from "../../constants/Common";
+import { Product } from "../../types";
 
 export default function AddProductScreen({ navigation }: any) {
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  const handleAddProduct = async (newProductData: Product) => {
+    setIsFetching(true);
+    const req = await fetch(BASE_URL + "/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProductData),
+    });
+    console.log(JSON.stringify(req));
+    if (req.status === 200) {
+      alert("Producto agregado correctamente");
+    }
+    setIsFetching(false);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -21,7 +39,12 @@ export default function AddProductScreen({ navigation }: any) {
         <Text style={styles.title}>Agregar producto</Text>
 
         <View style={{ width: "100%" }}>
-          <ProductForm onSubmit={() => undefined} productData={blankProduct} />
+          <ProductForm
+            buttonDisabled={isFetching}
+            buttonTitle={isFetching ? "Procesando..." : "Agregar producto"}
+            onSubmit={handleAddProduct}
+            productData={blankProduct}
+          />
         </View>
       </ScrollView>
     </View>

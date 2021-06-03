@@ -13,11 +13,7 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
-    return (
-      <View>
-        <Loader />
-      </View>
-    );
+    return <View></View>;
   } else {
     return (
       <SafeAreaProvider>

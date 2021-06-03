@@ -1,38 +1,48 @@
 import * as React from "react";
-import { useContext, useState } from "react";
-import { StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { useState } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
 import MyButton from "../components/Button";
-import cartContext from "../context/Cart";
-import { CartState } from "../types";
-import { productList as initialData } from "../constants/MockData";
+import { useCart } from "../context/Cart";
 import Product from "../components/Product";
 import SearchBar from "../components/SearchBar";
-import UserContext from "../context/User";
+import { useCurrentUser } from "../context/User";
 import CurrentUserAvatar from "../components/CurrentUserAvatar";
-import useInitialFetch from "../hooks/useInitialFetch";
 import Loader from "../components/Loader";
 import Layout from "../constants/Layout";
-import { useProducts } from "../context/Products";
+import useInitialFetch from "../hooks/useInitialFetch";
+import { BASE_URL } from "../constants/Common";
 
 export default function TabOneScreen({ navigation, route }: any) {
-  const { cartFunctions } = useContext<CartState>(cartContext);
-  const { currentUser } = useContext(UserContext);
-  // const { data, isLoading } = useInitialFetch("/products");
-  const { productsList } = useProducts();
-  const [localProductList, setLocalProductList] = useState(initialData);
+  const { cartFunctions } = useCart();
+  const { currentUser } = useCurrentUser();
+  const {
+    data: productsList,
+    isLoading,
+    setIsLoading,
+  } = useInitialFetch("/products");
+  const [localProductList, setLocalProductList] = useState(productsList);
 
   const handleSearchTextChange = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = productsList.filter((each) => regex.test(each.title));
+    const filteredList = productsList.filter((each: any) =>
+      regex.test(each.title)
+    );
     setLocalProductList(filteredList);
   };
 
-  // React.useEffect(() => {
-  //   setLocalProductList(productsList);
-  // }, [productsList]);
+  React.useEffect(() => {
+    setLocalProductList(productsList);
+  }, [productsList]);
+
+  const handleNewRequest = async () => {
+    setIsLoading(true);
+    const req = await fetch(BASE_URL + "/products");
+    const res = await req.json();
+    req.status === 200 && setLocalProductList(res);
+    setIsLoading(false);
+  };
 
   return (
     <View style={styles.pageContainer}>
@@ -54,37 +64,38 @@ export default function TabOneScreen({ navigation, route }: any) {
         </View>
         <Text style={styles.highlightedProducts}>Productos destacados</Text>
         <View style={styles.separator} />
-        {
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <View>
             {localProductList?.length <= 0 ? (
               <Text style={styles.notFound}>No se encontraron productos</Text>
             ) : (
-              localProductList?.map((each) => (
-                <Product
-                  navigation={navigation}
-                  product={each}
-                  key={`${each?.id}`}
-                  onSwipeRight={() => cartFunctions.addToCart(each)}
-                  route={route}
-                >
-                  <MyButton
-                    style={{ width: "100%" }}
-                    title="Agregar a carrito"
-                    onPress={() => cartFunctions.addToCart(each)}
-                  />
-                </Product>
-              ))
+              <FlatList
+                refreshing={isLoading}
+                onRefresh={handleNewRequest}
+                data={localProductList}
+                keyExtractor={({ id }) => `${id}`}
+                style={[styles.scrollView]}
+                renderItem={({ item }) => (
+                  <Product
+                    navigation={navigation}
+                    product={item}
+                    key={`${item?.id}`}
+                    onSwipeRight={() => cartFunctions.addToCart(item)}
+                    route={route}
+                  >
+                    <MyButton
+                      style={{ width: "100%" }}
+                      title="Agregar a carrito"
+                      onPress={() => cartFunctions.addToCart(item)}
+                    />
+                  </Product>
+                )}
+              ></FlatList>
             )}
-          </ScrollView>
-        }
+          </View>
+        )}
       </View>
     </View>
   );
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollView: {
-    flex: 1, // Use full screen
+    flex: 1,
   },
   title: {
     fontSize: 32,

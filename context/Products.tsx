@@ -1,12 +1,22 @@
-import React, { createContext, useMemo, useState, useContext } from "react";
-import { productList as initialProducts } from "../constants/MockData";
+import React, {
+  createContext,
+  useMemo,
+  useState,
+  useContext,
+  useEffect,
+} from "react";
+import useInitialFetch from "../hooks/useInitialFetch";
 import { Product, ProductActions, ProductsState } from "../types";
 
 const ProductContext = createContext<ProductsState>(undefined!);
 
 export function ProductsProvider(props: any) {
-  const [productsList, setProductsList] =
-    useState<Product[] | any[]>(initialProducts);
+  const { data, isLoading } = useInitialFetch("/products");
+  const [productsList, setProductsList] = useState<Product[] | any[]>(data);
+
+  useEffect(() => {
+    setProductsList(data);
+  }, [data]);
 
   const productsFunctions = useMemo<ProductActions>(
     () => ({
@@ -42,7 +52,7 @@ export function ProductsProvider(props: any) {
   return (
     <ProductContext.Provider
       {...props}
-      value={{ productsFunctions, productsList }}
+      value={{ productsFunctions, productsList, isLoading }}
     >
       {props.children}
     </ProductContext.Provider>
