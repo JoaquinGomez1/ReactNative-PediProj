@@ -5,15 +5,15 @@ export const currentTheme = "light";
 
 export default {
   light: {
-    text: "#4b5563",
+    text: "#374151",
     background: "#fff",
     tint: tintColorLight,
     tabIconDefault: "#ccc",
     tabIconSelected: tintColorLight,
   },
   dark: {
-    text: "#fff",
-    background: "#000",
+    text: "#F9FAFB",
+    background: "#1F2937",
     tint: tintColorDark,
     tabIconDefault: "#ccc",
     tabIconSelected: tintColorDark,

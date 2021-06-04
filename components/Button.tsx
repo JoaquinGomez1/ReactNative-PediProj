@@ -25,6 +25,24 @@ interface ButtonStyles {
   buttonText: StyleProp<TextStyle>;
 }
 
+const buttonColors = {
+  backgroundColor: {
+    default: Colors.colors.red[500],
+    altStyle: "transparent",
+    disabled: Colors.colors.gray[300],
+  },
+  color: {
+    default: "white",
+    altStyle: Colors.colors.red[500],
+    disabled: Colors.colors.gray[400],
+  },
+  borderColor: {
+    default: Colors.colors.red[500],
+    altStyle: Colors.colors.red[500],
+    disabled: Colors.colors.gray[300],
+  },
+};
+
 export default function MyButton({
   style,
   title,
@@ -32,7 +50,14 @@ export default function MyButton({
   disabled,
   ...rest
 }: PropsWithoutRef<MyButtonProps>) {
-  const btnStyles = buttonStyle(altStyle);
+  const currentStyle = getCurrentStyle();
+  const btnStyles = buttonStyle(currentStyle);
+
+  function getCurrentStyle() {
+    if (disabled) return "disabled";
+    if (altStyle) return "altStyle";
+    return "default";
+  }
 
   return (
     <TouchableOpacity style={styles.container} disabled={disabled} {...rest}>
@@ -44,21 +69,23 @@ export default function MyButton({
 }
 
 // Esta funcion retorna un objeto y me permite pasarle props dentro del componente
-const buttonStyle = (altStyle: any): ButtonStyles => {
+const buttonStyle = (
+  appliedStyle: "default" | "altStyle" | "disabled"
+): ButtonStyles => {
   return {
     button: {
       width: "100%",
       marginVertical: Layout.spacing[1],
       paddingHorizontal: Layout.spacing[1],
       paddingVertical: 3,
-      borderColor: Colors.colors.red[500],
+      borderColor: buttonColors.borderColor[appliedStyle],
       borderWidth: 2,
       borderRadius: 5,
-      backgroundColor: altStyle ? "transparent" : Colors.colors.red[500],
+      backgroundColor: buttonColors.backgroundColor[appliedStyle],
     },
     buttonText: {
       fontSize: 20,
-      color: altStyle ? Colors.colors.red[500] : "white",
+      color: buttonColors.color[appliedStyle],
       textAlign: "center",
     },
   };

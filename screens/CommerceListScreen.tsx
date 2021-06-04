@@ -13,6 +13,7 @@ import Layout from "../constants/Layout";
 import { useCommercesProvider } from "../context/Commerces";
 import useCategories from "../hooks/useCategories";
 import useCommerces from "../hooks/useCommerce";
+import handleNewRequest from "../libs/handleNewRequest";
 import { Category as CategoryType, Commerce as CommerceType } from "../types";
 
 type CategoriesNavigationProps = StackNavigationProp<any, any>;
@@ -26,6 +27,7 @@ export default function CommerceListScreen({
   navigation,
 }: React.PropsWithRef<CommerceDetailScreen>) {
   const { commerceList: initialData } = useCommercesProvider();
+  const [isLoading, setIsLoading] = useState(false);
   const [localCommercesList, setLocalCommercesList] =
     useState<CommerceType[] | []>(initialData);
 
@@ -124,6 +126,14 @@ export default function CommerceListScreen({
       />
       <View>
         <FlatList
+          refreshing={isLoading}
+          onRefresh={() =>
+            handleNewRequest({
+              url: "/commerces",
+              setIsLoading,
+              setState: setLocalCommercesList,
+            })
+          }
           contentContainerStyle={styles.list}
           data={localCommercesList}
           showsVerticalScrollIndicator={false}

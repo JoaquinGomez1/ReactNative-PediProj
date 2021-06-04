@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     minWidth: 260,
-    height: 330,
+    minHeight: 330,
     justifyContent: "center",
     borderRadius: 6,
     borderWidth: 1,

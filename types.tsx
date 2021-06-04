@@ -57,8 +57,8 @@ export type Commerce = {
   name: string;
   description: string;
   img: string;
-  longitude: number;
-  latitude: number;
+  longitude: number | string;
+  latitude: number | string;
   category: Category["id"];
 };
 
@@ -102,6 +102,7 @@ export type CartActions = {
   deleteFromCart: (id: number | string) => void;
   clearCart: () => void;
   getCartTotal: () => number;
+  setProductQuantity: (ammount: number, id: string | number) => void;
 };
 
 export type ProductActions = {

@@ -7,6 +7,7 @@ import { useCart } from "../context/Cart";
 import MyButton from "../components/Button";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
+import TouchableIcon from "../components/TouchableIcon";
 
 const PRODUCT_HEIGHT = 300;
 
@@ -21,9 +22,12 @@ export default function ShoppingCart({ navigation, route }: any) {
         data={cart}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        bounces
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          marginRight: Layout.spacing[2],
+        }}
         keyExtractor={({ id }) => `${id}`}
-        style={{ width: "80%" }}
         renderItem={({ item }) => (
           <ProductComponent
             key={item.id}
@@ -33,7 +37,21 @@ export default function ShoppingCart({ navigation, route }: any) {
             product={item}
             route={route}
           >
-            <Text style={styles.quantity}>Cantidad: {item.units}</Text>
+            <View style={styles.actionsContainer}>
+              <TouchableIcon
+                onPress={() =>
+                  cartFunctions.setProductQuantity(item.units - 1, item.id)
+                }
+                iconName="minus"
+              />
+              <Text style={styles.quantity}>Cantidad: {item.units}</Text>
+              <TouchableIcon
+                onPress={() => {
+                  cartFunctions.setProductQuantity(item.units + 1, item.id);
+                }}
+                iconName="plus"
+              />
+            </View>
           </ProductComponent>
         )}
       />
@@ -59,6 +77,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         />
         <MyButton
           title="Comprar productos"
+          disabled={cart.length < 1}
           onPress={() => alert("Esperando implementacion")}
         />
       </View>
@@ -68,6 +87,7 @@ export default function ShoppingCart({ navigation, route }: any) {
 
 const styles = StyleSheet.create({
   container: {
+    paddingHorizontal: Layout.spacing[4],
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -90,5 +110,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: Colors.colors.gray[600],
+    marginHorizontal: Layout.spacing[3],
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -38,6 +38,19 @@ export function CartProvider(props: any) {
           0
         );
       },
+      setProductQuantity: (ammount, id) => {
+        if (ammount < 1) {
+          cartFunctions.deleteFromCart(id);
+          return;
+        }
+        const cartCopy = [...cart];
+        const searchedProductIndex = cart.findIndex(
+          (product) => product.id === id
+        );
+        cartCopy[searchedProductIndex].units = ammount;
+
+        setCart(cartCopy);
+      },
     }),
 
     [cart]

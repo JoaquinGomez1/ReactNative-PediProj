@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { ScrollView, StyleSheet, FlatList } from "react-native";
 import Colors from "../../constants/Colors";
 import ListItem from "../../components/ListItem";
 import { Text, View } from "../../components/Themed";
@@ -11,27 +10,33 @@ import Layout from "../../constants/Layout";
 import { useProducts } from "../../context/Products";
 import IconButton from "../../components/IconButton";
 import { BASE_URL } from "../../constants/Common";
+import handleNewRequest from "../../libs/handleNewRequest";
 
 export default function ProductListScreen({ navigation }: any) {
   const { productsList, productsFunctions } = useProducts();
-  const [selectedProductId, setSelectedProductId] =
-    useState<number | string | undefined>();
   const [requestStarted, setRequestStarted] = useState<boolean>(false);
+  const [localProductList, setLocalProductList] = useState(productsList);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [showAddButton, setShowAddButton] = useState(true);
+
+  const [selectedProductId, setSelectedProductId] =
+    useState<number | string | undefined>();
   const [selectedProductData, setSelectedProductData] =
     useState<Product | undefined>();
 
   useEffect(() => {
     // Sets selected data and toggles Add button
-    const selected = productsList.find((each) => each.id === selectedProductId);
+    const selected = localProductList.find(
+      (each) => each.id === selectedProductId
+    );
     setSelectedProductData(selected);
-    if (selectedProductId) {
-      setShowAddButton(false);
-    } else {
-      setShowAddButton(true);
-    }
+    setShowAddButton(!selectedProductId);
   }, [selectedProductId]);
+
+  useEffect(() => {
+    setLocalProductList(productsList);
+  }, [productsList]);
 
   const handleSubmit = async (editedProduct: Product) => {
     // Edited product gets passed by the FormProduct component
@@ -43,7 +48,6 @@ export default function ProductListScreen({ navigation }: any) {
       },
       body: JSON.stringify(editedProduct),
     });
-    console.log(JSON.stringify(editedProduct));
 
     if (req.status === 200) {
       alert("Producto actualizado correctamente");
@@ -51,11 +55,31 @@ export default function ProductListScreen({ navigation }: any) {
     setRequestStarted(false);
   };
 
+  const handleDelete = async (id: number | string) => {
+    const req = await fetch(BASE_URL + `/products/${id}`, {
+      method: "DELETE",
+    });
+
+    if (req.status === 200) {
+      // Delete item from the client
+      productsFunctions.deleteProductById(id);
+      alert("Producto eliminado correctamente");
+    }
+  };
+
   return (
     <View style={styles.container}>
       {!selectedProductData && (
         <FlatList
-          data={productsList}
+          refreshing={isLoading}
+          onRefresh={() =>
+            handleNewRequest({
+              url: "/products",
+              setIsLoading,
+              setState: setLocalProductList,
+            })
+          }
+          data={localProductList}
           keyExtractor={(item) => `${item.id}`}
           style={{ width: "100%" }}
           showsVerticalScrollIndicator={false}
@@ -75,7 +99,7 @@ export default function ProductListScreen({ navigation }: any) {
                 style={{ color: Colors.colors.gray[400] }}
               />
               <TouchableIcon
-                onPress={() => productsFunctions.deleteProductById(id)}
+                onPress={() => handleDelete(id)}
                 iconName="trash"
                 style={{
                   color: Colors.colors.red[600],

@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
 import ListItem from "../../components/ListItem";
 import { Text, View } from "../../components/Themed";
 import TouchableIcon from "../../components/TouchableIcon";
 import { Commerce } from "../../types";
 import Layout from "../../constants/Layout";
-import Icon from "../../components/DefaultIcon";
 import FormCommerce from "../../components/FormCommerce";
 import IconButton from "../../components/IconButton";
 import { useCommercesProvider } from "../../context/Commerces";
+import { BASE_URL } from "../../constants/Common";
 
 export default function ManageCommerceScreen({ navigation }: any) {
-  const { commerceList } = useCommercesProvider();
+  const { commerceList, commercesFunctions } = useCommercesProvider();
   const [selectedProductId, setSelectedProductId] =
     useState<number | string | undefined>();
+  const [requestStarted, setRequestStarted] = useState(false);
 
   const [showAddButton, setShowAddButton] = useState(true);
   const [selectedCommerceData, setselectedCommerceData] =
@@ -24,12 +25,39 @@ export default function ManageCommerceScreen({ navigation }: any) {
   useEffect(() => {
     const selected = commerceList.find((each) => each.id === selectedProductId);
     setselectedCommerceData(selected);
-    if (selectedProductId) {
-      setShowAddButton(false);
-    } else {
-      setShowAddButton(true);
-    }
+    setShowAddButton(!selectedProductId);
   }, [selectedProductId]);
+
+  const handleSubmit = async (editedCommerce: Commerce) => {
+    // Edited Commerce gets passed by the FormCommerce component
+    setRequestStarted(true);
+    const req = await fetch(BASE_URL + "/commerces", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editedCommerce),
+    });
+
+    if (req.status === 200) {
+      alert("Comercio actualizado correctamente");
+    }
+    setRequestStarted(false);
+  };
+
+  const handleDelete = async (id: number | string) => {
+    const req = await fetch(BASE_URL + `/commerces/${id}`, {
+      method: "DELETE",
+    });
+
+    console.log(JSON.stringify(req));
+
+    if (req.status === 200) {
+      // Delete item from the client
+      commercesFunctions.deleteCommerceById(id);
+      alert("Comercio eliminado correctamente");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,7 +75,7 @@ export default function ManageCommerceScreen({ navigation }: any) {
                 style={{ color: Colors.colors.gray[400] }}
               />
               <TouchableIcon
-                onPress={() => undefined}
+                onPress={() => handleDelete(id)}
                 iconName="trash"
                 style={{
                   color: Colors.colors.red[600],
@@ -68,12 +96,12 @@ export default function ManageCommerceScreen({ navigation }: any) {
                 iconName="arrow-left"
                 onPress={() => setSelectedProductId(undefined)}
               />
-              <Text style={{ marginLeft: 50, fontSize: 16 }}>
+              <Text style={{ marginLeft: 50, fontSize: 16 }} numberOfLines={1}>
                 Editar: {selectedCommerceData?.name}
               </Text>
             </View>
             <FormCommerce
-              onSubmit={() => undefined}
+              onSubmit={handleSubmit}
               commerceData={selectedCommerceData}
             />
           </ScrollView>

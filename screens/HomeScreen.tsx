@@ -12,7 +12,7 @@ import CurrentUserAvatar from "../components/CurrentUserAvatar";
 import Loader from "../components/Loader";
 import Layout from "../constants/Layout";
 import useInitialFetch from "../hooks/useInitialFetch";
-import { BASE_URL } from "../constants/Common";
+import handleNewRequest from "../libs/handleNewRequest";
 
 export default function TabOneScreen({ navigation, route }: any) {
   const { cartFunctions } = useCart();
@@ -35,14 +35,6 @@ export default function TabOneScreen({ navigation, route }: any) {
   React.useEffect(() => {
     setLocalProductList(productsList);
   }, [productsList]);
-
-  const handleNewRequest = async () => {
-    setIsLoading(true);
-    const req = await fetch(BASE_URL + "/products");
-    const res = await req.json();
-    req.status === 200 && setLocalProductList(res);
-    setIsLoading(false);
-  };
 
   return (
     <View style={styles.pageContainer}>
@@ -73,7 +65,13 @@ export default function TabOneScreen({ navigation, route }: any) {
             ) : (
               <FlatList
                 refreshing={isLoading}
-                onRefresh={handleNewRequest}
+                onRefresh={() =>
+                  handleNewRequest({
+                    setIsLoading,
+                    setState: setLocalProductList,
+                    url: "/products",
+                  })
+                }
                 data={localProductList}
                 keyExtractor={({ id }) => `${id}`}
                 style={[styles.scrollView]}
@@ -92,7 +90,7 @@ export default function TabOneScreen({ navigation, route }: any) {
                     />
                   </Product>
                 )}
-              ></FlatList>
+              />
             )}
           </View>
         )}
@@ -113,6 +111,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    maxHeight: "85%",
   },
   title: {
     fontSize: 32,

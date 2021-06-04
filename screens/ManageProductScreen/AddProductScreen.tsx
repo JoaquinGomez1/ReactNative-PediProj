@@ -19,7 +19,6 @@ export default function AddProductScreen({ navigation }: any) {
       },
       body: JSON.stringify(newProductData),
     });
-    console.log(JSON.stringify(req));
     if (req.status === 200) {
       alert("Producto agregado correctamente");
     }

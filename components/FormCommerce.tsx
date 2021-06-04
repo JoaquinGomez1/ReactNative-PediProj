@@ -14,7 +14,7 @@ import { LatLng } from "react-native-maps";
 
 interface FormCommerceProps {
   buttonStyle?: StyleProp<ViewStyle>;
-  onSubmit?: () => void;
+  onSubmit?: (commerce: Commerce) => void;
   commerceData?: Commerce;
   buttonDisabled?: boolean;
 }
@@ -35,6 +35,16 @@ const handleNumericInputs = (numberString: string): number => {
     console.log("Something went wrong ", err);
     return 0;
   }
+};
+
+const blankCommerce: Commerce = {
+  id: 0,
+  name: "",
+  description: "",
+  img: "",
+  longitude: "",
+  latitude: "",
+  category: "",
 };
 
 const allInputs = (
@@ -110,8 +120,9 @@ export default function FormCommerce({
   commerceData,
   buttonDisabled,
 }: PropsWithRef<FormCommerceProps>) {
-  const [currentCommerceData, setCurrentCommerceData] =
-    useState<Commerce | undefined>(commerceData);
+  const [currentCommerceData, setCurrentCommerceData] = useState<
+    Commerce | undefined
+  >(commerceData || blankCommerce);
 
   return (
     <View style={styles.container}>
@@ -128,9 +139,6 @@ export default function FormCommerce({
                 onChangeText={textChangeHandler}
                 multiline={isDescription}
                 keyboardType={keyboard}
-                value={`${
-                  currentCommerceData ? currentCommerceData[name] : ""
-                }`}
               />
             );
           }
@@ -139,7 +147,7 @@ export default function FormCommerce({
       <MyButton
         disabled={buttonDisabled ? buttonDisabled : false}
         title="Agregar"
-        onPress={() => onSubmit && onSubmit()}
+        onPress={() => onSubmit && onSubmit(currentCommerceData!)}
         style={buttonStyle}
       />
       <MyButton
