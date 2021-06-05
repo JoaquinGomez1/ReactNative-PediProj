@@ -29,7 +29,6 @@ export default function LoginScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.mainTitle}>Pedi-Proj</Text>
-      {}
       <Text style={styles.title}>Login</Text>
       <View
         style={styles.separator}
@@ -88,6 +87,7 @@ const styles = StyleSheet.create({
     color: Colors.colors.blue[400],
     fontSize: 18,
   },
+
   input: {
     paddingHorizontal: 10,
     borderRadius: 8,

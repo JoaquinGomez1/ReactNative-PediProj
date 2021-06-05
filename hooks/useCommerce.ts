@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { commerceList } from "../constants/MockData";
 import { Commerce } from "../types";
+import useInitialFetch from "./useInitialFetch";
 
 type useCategoriesReturnType = {
   commerces: Commerce[];
@@ -10,20 +10,25 @@ type useCategoriesReturnType = {
 export default function useCommerces(
   commerceId?: string | number
 ): useCategoriesReturnType {
-  const [commerces] = useState(commerceList);
+  const { data } = useInitialFetch("/commerces");
+  const [commerces, setCommerces] = useState(data);
   const [commerceSelected, setCommerceSelected] =
     useState<Commerce | undefined>();
 
-  function determineCategory(id: string | number): Commerce | undefined {
-    const foundCategory = commerces.find((each) => each.id === id);
-    if (foundCategory) return foundCategory;
+  function determineCommerce(id: string | number): Commerce | undefined {
+    const foundCommerce = commerces?.find((each: Commerce) => each.id === id);
+    if (foundCommerce) return foundCommerce;
   }
 
   useEffect(() => {
     if (!commerceId) return;
-    const categoryFound = determineCategory(commerceId);
+    const categoryFound = determineCommerce(commerceId);
     setCommerceSelected(categoryFound);
   }, []);
+
+  useEffect(() => {
+    setCommerces(data);
+  }, [data]);
 
   return { commerces, commerceSelected };
 }

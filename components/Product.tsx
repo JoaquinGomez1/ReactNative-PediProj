@@ -80,13 +80,13 @@ export default function Product(props: ProductProps) {
   };
 
   return (
-    <GestureRecognizer
-      onSwipeRight={handleSwipeRight}
-      onSwipeLeft={handleSwipeLeft}
+    <Animated.View
+      {...props}
+      style={[styles.container, productAnimationDetails, props.style]}
     >
-      <Animated.View
-        {...props}
-        style={[styles.container, productAnimationDetails, props.style]}
+      <GestureRecognizer
+        onSwipeRight={handleSwipeRight}
+        onSwipeLeft={handleSwipeLeft}
       >
         <TouchableOpacity onPress={handleNavigation}>
           <ProductImage source={{ uri: product?.img }} />
@@ -105,8 +105,8 @@ export default function Product(props: ProductProps) {
           </View>
         </TouchableOpacity>
         <View>{props.children}</View>
-      </Animated.View>
-    </GestureRecognizer>
+      </GestureRecognizer>
+    </Animated.View>
   );
 }
 
@@ -127,9 +127,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: "100%",
-    minWidth: 260,
     minHeight: 330,
-    justifyContent: "center",
     borderRadius: 6,
     borderWidth: 1,
     borderColor: Colors.colors.borders,

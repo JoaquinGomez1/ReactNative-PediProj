@@ -39,6 +39,7 @@ export function CartProvider(props: any) {
         );
       },
       setProductQuantity: (ammount, id) => {
+        console.log("reder");
         if (ammount < 1) {
           cartFunctions.deleteFromCart(id);
           return;

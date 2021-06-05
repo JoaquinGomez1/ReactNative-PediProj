@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { ScrollView, StyleSheet, FlatList } from "react-native";
 import Colors from "../../constants/Colors";
 import ListItem from "../../components/ListItem";
 import { Text, View } from "../../components/Themed";
@@ -11,9 +10,14 @@ import FormCommerce from "../../components/FormCommerce";
 import IconButton from "../../components/IconButton";
 import { useCommercesProvider } from "../../context/Commerces";
 import { BASE_URL } from "../../constants/Common";
+import handleNewRequest from "../../libs/handleNewRequest";
 
 export default function ManageCommerceScreen({ navigation }: any) {
-  const { commerceList, commercesFunctions } = useCommercesProvider();
+  const { commerceList: initialData, commercesFunctions } =
+    useCommercesProvider();
+  const [isLoading, setIsLoading] = useState(false);
+  const [localCommerceList, setLocalCommerceList] = useState(initialData);
+
   const [selectedProductId, setSelectedProductId] =
     useState<number | string | undefined>();
   const [requestStarted, setRequestStarted] = useState(false);
@@ -23,10 +27,14 @@ export default function ManageCommerceScreen({ navigation }: any) {
     useState<Commerce | undefined>();
 
   useEffect(() => {
-    const selected = commerceList.find((each) => each.id === selectedProductId);
+    const selected = initialData.find((each) => each.id === selectedProductId);
     setselectedCommerceData(selected);
     setShowAddButton(!selectedProductId);
   }, [selectedProductId]);
+
+  useEffect(() => {
+    setLocalCommerceList(initialData);
+  }, [initialData]);
 
   const handleSubmit = async (editedCommerce: Commerce) => {
     // Edited Commerce gets passed by the FormCommerce component
@@ -39,9 +47,8 @@ export default function ManageCommerceScreen({ navigation }: any) {
       body: JSON.stringify(editedCommerce),
     });
 
-    if (req.status === 200) {
-      alert("Comercio actualizado correctamente");
-    }
+    if (req.status === 200) alert("Comercio actualizado correctamente");
+    else alert("Algo salió mal al actualizar el comercio");
     setRequestStarted(false);
   };
 
@@ -49,8 +56,6 @@ export default function ManageCommerceScreen({ navigation }: any) {
     const req = await fetch(BASE_URL + `/commerces/${id}`, {
       method: "DELETE",
     });
-
-    console.log(JSON.stringify(req));
 
     if (req.status === 200) {
       // Delete item from the client
@@ -63,9 +68,17 @@ export default function ManageCommerceScreen({ navigation }: any) {
     <View style={styles.container}>
       {!selectedCommerceData && (
         <FlatList
-          data={commerceList}
+          data={localCommerceList}
           keyExtractor={(item) => `${item.id}`}
           style={{ width: "100%" }}
+          onRefresh={() =>
+            handleNewRequest({
+              url: "/commerces",
+              setState: setLocalCommerceList,
+              setIsLoading,
+            })
+          }
+          refreshing={isLoading}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: { name, img, id } }) => (
             <ListItem item={{ title: name, id, img }}>
@@ -101,6 +114,7 @@ export default function ManageCommerceScreen({ navigation }: any) {
               </Text>
             </View>
             <FormCommerce
+              buttonDisabled={requestStarted}
               onSubmit={handleSubmit}
               commerceData={selectedCommerceData}
             />

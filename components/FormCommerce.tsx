@@ -42,16 +42,14 @@ const blankCommerce: Commerce = {
   name: "",
   description: "",
   img: "",
-  longitude: "",
-  latitude: "",
+  longitude: undefined,
+  latitude: undefined,
   category: "",
 };
 
 const allInputs = (
-  currentCommerceData: Commerce | undefined,
-  setCurrentCommerceData: React.Dispatch<
-    React.SetStateAction<Commerce | undefined>
-  >
+  currentCommerceData: Commerce,
+  setCurrentCommerceData: React.Dispatch<React.SetStateAction<Commerce>>
 ): InputTypes[] => [
   // Check if currentCommerceData is not undefined on every handler
   {
@@ -118,11 +116,11 @@ export default function FormCommerce({
   buttonStyle,
   onSubmit,
   commerceData,
-  buttonDisabled,
+  buttonDisabled = false,
 }: PropsWithRef<FormCommerceProps>) {
-  const [currentCommerceData, setCurrentCommerceData] = useState<
-    Commerce | undefined
-  >(commerceData || blankCommerce);
+  const [currentCommerceData, setCurrentCommerceData] = useState<Commerce>(
+    commerceData || blankCommerce
+  );
 
   return (
     <View style={styles.container}>
@@ -139,13 +137,16 @@ export default function FormCommerce({
                 onChangeText={textChangeHandler}
                 multiline={isDescription}
                 keyboardType={keyboard}
+                value={`${
+                  currentCommerceData[name] ? currentCommerceData[name] : ""
+                }`}
               />
             );
           }
         )}
       </ScrollView>
       <MyButton
-        disabled={buttonDisabled ? buttonDisabled : false}
+        disabled={buttonDisabled}
         title="Agregar"
         onPress={() => onSubmit && onSubmit(currentCommerceData!)}
         style={buttonStyle}

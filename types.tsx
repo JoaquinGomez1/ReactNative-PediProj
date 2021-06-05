@@ -57,8 +57,8 @@ export type Commerce = {
   name: string;
   description: string;
   img: string;
-  longitude: number | string;
-  latitude: number | string;
+  longitude: number | undefined;
+  latitude: number | undefined;
   category: Category["id"];
 };
 
@@ -90,7 +90,7 @@ export type UserState = {
 };
 
 export type UserActions = {
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<boolean>;
   // loginWithFirebase: () => void;
   logout: () => void;
   signup: (user: User, password: string) => void;

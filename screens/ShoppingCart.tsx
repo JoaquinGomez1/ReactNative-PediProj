@@ -22,10 +22,9 @@ export default function ShoppingCart({ navigation, route }: any) {
         data={cart}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        style={{ width: "100%" }}
         contentContainerStyle={{
           alignItems: "center",
-          justifyContent: "center",
-          marginRight: Layout.spacing[2],
         }}
         keyExtractor={({ id }) => `${id}`}
         renderItem={({ item }) => (
@@ -56,15 +55,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         )}
       />
 
-      <View
-        style={{
-          width: "100%",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderColor: Colors.colors.gray[200],
-          borderTopWidth: 1,
-        }}
-      >
+      <View style={styles.cartActions}>
         <View>
           <Text style={styles.total}>
             Total: ${cartFunctions.getCartTotal()}.00
@@ -89,8 +80,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Layout.spacing[4],
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   title: {
     fontSize: 18,
@@ -98,8 +87,6 @@ const styles = StyleSheet.create({
   },
   card: {
     marginVertical: 8,
-    height: PRODUCT_HEIGHT,
-    paddingHorizontal: Layout.spacing[1],
   },
   total: {
     fontSize: 18,
@@ -116,5 +103,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  cartActions: {
+    width: "100%",
+    paddingVertical: 10,
+    borderColor: Colors.colors.gray[200],
+    borderTopWidth: 1,
   },
 });

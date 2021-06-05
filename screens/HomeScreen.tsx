@@ -72,6 +72,7 @@ export default function TabOneScreen({ navigation, route }: any) {
                     url: "/products",
                   })
                 }
+                showsVerticalScrollIndicator={false}
                 data={localProductList}
                 keyExtractor={({ id }) => `${id}`}
                 style={[styles.scrollView]}

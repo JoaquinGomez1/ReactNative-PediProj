@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 
 import MyButton from "./Button";
 import Colors from "../constants/Colors";
-import { useCurrentUser } from "../context/User";
 // import firebaseApp from "../config.firebase";
 import firebase from "firebase";
 import { firebaseConfig } from "../config.firebase";
+import { makeRedirectUri } from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -16,7 +16,7 @@ if (!firebase.apps.length) {
 }
 
 export default function GoogleAuth({ onPressAditional, disabled }: any) {
-  const { setCurrentUser } = useCurrentUser();
+  const redirectUri = makeRedirectUri({ useProxy: true });
 
   // Official expo documentation
   // https://docs.expo.io/guides/authentication/#google
@@ -28,6 +28,7 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
       "169631416443-am9l3tm26km98i1bf2k2lc54ejpak81p.apps.googleusercontent.com",
     webClientId:
       "169631416443-a9lhd47m4pkm8epdigb55fippcp7gr5e.apps.googleusercontent.com",
+    redirectUri,
   });
 
   React.useEffect(() => {
@@ -40,7 +41,8 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
   }, [response]);
 
   const handleLogin = () => {
-    promptAsync();
+    console.log(redirectUri);
+    promptAsync({ useProxy: true });
     onPressAditional && onPressAditional();
   };
 

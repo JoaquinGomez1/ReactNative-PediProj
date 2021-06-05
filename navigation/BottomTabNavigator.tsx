@@ -23,6 +23,7 @@ import ManageProductsScreen from "../screens/ManageProductScreen";
 import ManageCommercesScreen from "../screens/ManageCommerceScreen";
 import AddProductScreen from "../screens/ManageProductScreen/AddProductScreen";
 import AddCommerceScreen from "../screens/ManageCommerceScreen/AddCommerceScreen";
+import EditProductScreen from "../screens/ManageProductScreen/EditProductScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -214,6 +215,12 @@ function UserNavigator() {
         options={{ headerShown: true, title: "Agregar Producto" }}
         component={AddProductScreen}
       />
+      <UserStack.Screen
+        name="EditProduct"
+        options={{ headerShown: true, title: "Editar Producto" }}
+        component={EditProductScreen}
+      />
+
       <UserStack.Screen
         name="AddCommerce"
         options={{ headerShown: true, title: "Agregar Comercio" }}

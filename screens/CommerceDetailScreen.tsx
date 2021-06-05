@@ -42,8 +42,8 @@ export default function CommerceDetailScreen({
         <Map>
           <Marker
             coordinate={{
-              latitude: commerce?.latitude,
-              longitude: commerce?.longitude,
+              latitude: commerce?.latitude!,
+              longitude: commerce?.longitude!,
             }}
           />
         </Map>

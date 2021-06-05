@@ -10,16 +10,18 @@ export function UserProvider(props: any) {
   const userFunctions = useMemo<UserActions>(
     () => ({
       login: async (email, password) => {
-        if (!email || !password) return;
+        if (!email || !password) return false;
         try {
           const { user } = await firebase
             .auth()
             .signInWithEmailAndPassword(email, password);
 
           setCurrentUser({ ...user, isLoggedIn: true });
+          return true;
         } catch (err) {
           alert(err);
         }
+        return false;
       },
       logout: () => {
         firebase.auth().signOut();
