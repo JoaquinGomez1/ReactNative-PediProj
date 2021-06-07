@@ -1,21 +1,24 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-
 import { Text, View } from "../components/Themed";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import MyButton from "../components/Button";
 import { useCurrentUser } from "../context/User";
 import GoogleAuth from "../components/GoogleAuth";
+import LottieView from "lottie-react-native";
+import Layout from "../constants/Layout";
+import { emailRegex } from "../constants/Common";
 
 export default function LoginScreen({ navigation }: any) {
-  const { userFunctions } = useCurrentUser();
+  const { userFunctions, setCurrentUser } = useCurrentUser();
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [animationStarted, setAnimationStarted] = React.useState(false);
+  const animationPassed = React.useRef<LottieView>(null);
+  const ANIM_DURATION = 2.2 * 1000; // 2.2 Secs
 
   const handleLogin = (email: string, password: string) => {
-    const emailRegex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const isEmailValid = emailRegex.test(email);
 
     if (!isEmailValid) {
@@ -23,7 +26,22 @@ export default function LoginScreen({ navigation }: any) {
       return;
     }
 
-    userFunctions.login(email, password);
+    setAnimationStarted(true);
+    animationPassed?.current?.play(0, 59);
+
+    userFunctions.login(email, password).then((user) => {
+      if (user !== null) {
+        animationPassed && animationPassed?.current?.play(59, 120);
+
+        // Wait for animation to complete and then set the current user
+        setTimeout(() => {
+          setAnimationStarted(false);
+          setCurrentUser(user);
+        }, ANIM_DURATION);
+      } else {
+        setAnimationStarted(false);
+      }
+    });
   };
 
   return (
@@ -35,6 +53,15 @@ export default function LoginScreen({ navigation }: any) {
         lightColor="#eee"
         darkColor="rgba(255, 255, 255, 0.1)"
       />
+      <View style={LottieStyles(animationStarted).container}>
+        <LottieView
+          style={LottieStyles(animationStarted).animation}
+          ref={animationPassed}
+          source={require("../assets/lottie/loading-passed.json")}
+          autoPlay={false}
+          loop={false}
+        />
+      </View>
       <View style={{ width: "100%", paddingHorizontal: 20 }}>
         <TextInput
           style={styles.input}
@@ -64,6 +91,23 @@ export default function LoginScreen({ navigation }: any) {
       </View>
     </View>
   );
+}
+
+function LottieStyles(animationStarted: boolean) {
+  return {
+    container: {
+      position: "absolute" as "absolute", // ←- Weird bug but ok
+      width: animationStarted ? "100%" : 0,
+      height: animationStarted ? "100%" : 0,
+      zIndex: 99,
+    },
+    animation: {
+      width: animationStarted ? 240 : 0,
+      height: animationStarted ? 240 : 0,
+      top: Layout.window.height / 6,
+      left: Layout.window.width / 10,
+    },
+  };
 }
 
 const styles = StyleSheet.create({

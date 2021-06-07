@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "../../components/Themed";
 import ProductForm from "../../components/FormAddProduct";
-import { blankProduct } from "../../constants/MockData";
 import Layout from "../../constants/Layout";
 import { BASE_URL } from "../../constants/Common";
 import { Product } from "../../types";
@@ -42,7 +41,6 @@ export default function AddProductScreen({ navigation }: any) {
             buttonDisabled={isFetching}
             buttonTitle={isFetching ? "Procesando..." : "Agregar producto"}
             onSubmit={handleAddProduct}
-            productData={blankProduct}
           />
         </View>
       </ScrollView>

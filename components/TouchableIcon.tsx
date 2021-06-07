@@ -1,7 +1,6 @@
 import React, { PropsWithRef } from "react";
 import {
   StyleProp,
-  ViewStyle,
   TouchableOpacity,
   TextStyle,
 } from "react-native";

@@ -5,6 +5,7 @@ import { Text, View } from "../components/Themed";
 import { useCurrentUser } from "../context/User";
 import MyButton from "../components/Button";
 import CurrentUserAvatar from "../components/CurrentUserAvatar";
+import isAuthorized from "../libs/isAuthorized";
 
 export default function UserScreen({ navigation }: any) {
   const { currentUser, userFunctions } = useCurrentUser();
@@ -32,12 +33,25 @@ export default function UserScreen({ navigation }: any) {
               )
             }
           />
-          <MyButton
-            onPress={() => navigation.push("AdminPanel")}
-            title="Panel administrador"
-          />
+          {isAuthorized(currentUser!, "admin") && (
+            <MyButton
+              onPress={() => navigation.push("AdminPanel")}
+              title="Panel administrador"
+            />
+          )}
 
-          <MyButton title="Log out" onPress={() => userFunctions.logout()} />
+          {isAuthorized(currentUser!, "admin") && (
+            <MyButton
+              onPress={() => navigation.push("OrdersList")}
+              title="Ver Ordenes"
+            />
+          )}
+
+          <MyButton
+            altStyle
+            title="Log out"
+            onPress={() => userFunctions.logout()}
+          />
         </View>
       </View>
     </View>

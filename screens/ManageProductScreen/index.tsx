@@ -49,9 +49,9 @@ export default function ProductListScreen({ navigation }: any) {
         renderItem={({ item }) => (
           <ListItem
             item={{
-              title: item.title,
               id: item.id,
               img: item.img,
+              title: item.title,
               subtitle: `$${item.price}.00`,
               body: `X${item.units}`,
             }}

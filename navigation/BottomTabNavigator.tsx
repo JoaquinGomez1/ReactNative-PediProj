@@ -15,7 +15,6 @@ import { useCurrentUser } from "../context/User";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import UserScreen from "../screens/UserScreen";
-import firebaseApp from "../config.firebase";
 import LoadingScreen from "../screens/LoadingScreen";
 import CommerceDetailScreen from "../screens/CommerceDetailScreen";
 import AdminPanelScreen from "../screens/AdminPanelScreen";
@@ -24,6 +23,7 @@ import ManageCommercesScreen from "../screens/ManageCommerceScreen";
 import AddProductScreen from "../screens/ManageProductScreen/AddProductScreen";
 import AddCommerceScreen from "../screens/ManageCommerceScreen/AddCommerceScreen";
 import EditProductScreen from "../screens/ManageProductScreen/EditProductScreen";
+import OrdersListScreen from "../screens/OrdersListScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -49,21 +49,17 @@ const appNavigators: Array<NavigatorArrayContent> = [
 ];
 
 export default function BottomTabNavigator() {
-  const { setCurrentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isLoading] = React.useState(false);
-  const [authService] = React.useState(firebaseApp.auth());
 
   React.useEffect(() => {
-    authService.onAuthStateChanged((user) => {
-      if (user !== null) {
-        setCurrentUser(user);
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
-  }, [authService]);
+    if (currentUser && Object.keys(currentUser).length >= 1) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [currentUser]);
 
   return (
     <BottomTab.Navigator
@@ -159,7 +155,7 @@ const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
 function CategoriesNavigator() {
   return (
-    <TabTwoStack.Navigator>
+    <TabTwoStack.Navigator initialRouteName={"CommercesScreen"}>
       <TabTwoStack.Screen
         name="CommercesScreen"
         component={CommerceScreen}
@@ -181,7 +177,7 @@ function CartNavigator() {
     <CartStack.Navigator>
       <CartStack.Screen
         name="Cart"
-        options={{ headerTitle: "Shopping Cart" }}
+        options={{ headerTitle: "Carrito" }}
         component={ShoppingCart}
       />
     </CartStack.Navigator>
@@ -204,6 +200,13 @@ function UserNavigator() {
         options={{ headerShown: true, title: "Admin Panel" }}
         component={AdminPanelScreen}
       />
+
+      <UserStack.Screen
+        name="OrdersList"
+        options={{ headerShown: true, title: "Ver Ordenes" }}
+        component={OrdersListScreen}
+      />
+
       <UserStack.Screen
         name="ManageProducts"
         options={{ headerShown: true, title: "Gestionar Productos" }}

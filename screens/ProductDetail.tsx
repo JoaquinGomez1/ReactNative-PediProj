@@ -35,6 +35,7 @@ export default function ProductDetail({
     navigation.navigate("Comercios", {
       screen: "CommerceDetailScreen",
       params: { commerce: commerceSelected },
+      initial: false,
     });
   };
 

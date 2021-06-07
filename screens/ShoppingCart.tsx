@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TextInput } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { View } from "../components/Themed";
 import ProductComponent from "../components/Product";
@@ -8,16 +8,65 @@ import MyButton from "../components/Button";
 import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import TouchableIcon from "../components/TouchableIcon";
-
-const PRODUCT_HEIGHT = 300;
+import { input } from "../constants/Styles";
+import MyModal from "../components/Modal";
+import { Customer_Order } from "../types";
+import { useCurrentUser } from "../context/User";
+import handleNewRequest from "../libs/handleNewRequest";
 
 export default function ShoppingCart({ navigation, route }: any) {
   const { cart, cartFunctions } = useCart();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [address, setAddress] = useState<string>("");
+  const { currentUser } = useCurrentUser();
+
+  const [customerOrder] = useState<Customer_Order | undefined>({
+    products: [...cart],
+    orderData: {
+      customerName: currentUser?.displayName! || "default name",
+      email: currentUser?.email!,
+      address,
+      total: cartFunctions.getCartTotal(),
+    },
+  });
+
+  const handleFormSubmit = () => {
+    const orderCopy = { ...customerOrder };
+    if (orderCopy.orderData) orderCopy.orderData.address = address;
+
+    handleNewRequest({
+      url: "/orders",
+      fetchOptions: {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderCopy),
+      },
+    }).then(() => {
+      alert("Tu compra ha sido aceptada correctamente");
+      cartFunctions.clearCart();
+      setModalOpen(false);
+    });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{cart?.length} productos en la cesta</Text>
-
+      <MyModal
+        modalVisible={modalOpen}
+        onExitRequest={() => setModalOpen(false)}
+      >
+        <Text>Antes de terminar necesitamos un último detalle:</Text>
+        <TextInput
+          onChangeText={(text) => setAddress(text)}
+          style={input}
+          placeholder="Direccion"
+        />
+        <Text>Total: ${cartFunctions.getCartTotal()}.00</Text>
+        <Text>Cantidad de productos: {cart.length}</Text>
+        <View>
+          <MyButton title="Comprar" onPress={handleFormSubmit} />
+        </View>
+      </MyModal>
       <FlatList
         data={cart}
         showsVerticalScrollIndicator={false}
@@ -69,7 +118,7 @@ export default function ShoppingCart({ navigation, route }: any) {
         <MyButton
           title="Comprar productos"
           disabled={cart.length < 1}
-          onPress={() => alert("Esperando implementacion")}
+          onPress={() => setModalOpen(true)}
         />
       </View>
     </View>
@@ -81,6 +130,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Layout.spacing[4],
     flex: 1,
   },
+
   title: {
     fontSize: 18,
     marginVertical: 10,

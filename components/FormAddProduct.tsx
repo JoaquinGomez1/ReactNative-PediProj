@@ -9,7 +9,7 @@ import { View } from "./Themed";
 interface FormAddProductProps {
   buttonStyle?: StyleProp<ViewStyle>;
   onSubmit: (productData: Product) => void;
-  productData: Product;
+  productData?: Product;
   buttonDisabled?: boolean;
   buttonTitle: string;
 }
@@ -19,6 +19,16 @@ interface InputTypes {
   placeholder: string;
   keyboardType?: "numeric" | undefined;
 }
+
+const blankCommerce: Product = {
+  id: 0,
+  title: "",
+  description: "",
+  img: "",
+  units: undefined,
+  price: undefined,
+  commerce: "",
+};
 
 const allInputs = (
   currentProductData: Product,
@@ -69,7 +79,7 @@ const allInputs = (
     textChangeHandler: (text) =>
       setCurrentProductData({
         ...currentProductData,
-        commerce: handleNumericInputs(text)!,
+        commerce: text && handleNumericInputs(text),
       }),
     placeholder: "Id de commercio",
     keyboardType: "numeric",
@@ -79,7 +89,7 @@ const allInputs = (
 const handleNumericInputs = (numberString: string): number => {
   try {
     if (!numberString || isNaN(Number.parseInt(numberString))) return 0;
-    return Number.parseInt(numberString);
+    return Number.parseFloat(numberString);
   } catch (err) {
     console.log("Something went wrong ", err);
     return 0;
@@ -93,8 +103,9 @@ export default function FormAddProduct({
   buttonDisabled,
   buttonTitle,
 }: PropsWithRef<FormAddProductProps>) {
-  const [currentProductData, setCurrentProductData] =
-    useState<Product>(productData);
+  const [currentProductData, setCurrentProductData] = useState<Product>(
+    productData || blankCommerce
+  );
 
   return (
     <View style={styles.container}>
@@ -106,7 +117,9 @@ export default function FormAddProduct({
               style={styles.input}
               placeholder={placeholder}
               onChangeText={textChangeHandler}
-              value={`${currentProductData[name]}`}
+              value={`${
+                currentProductData[name] ? currentProductData[name] : ""
+              }`}
               keyboardType={keyboardType}
             />
           )

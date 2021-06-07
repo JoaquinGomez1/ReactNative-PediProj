@@ -8,6 +8,7 @@ import Colors from "../constants/Colors";
 import firebase from "firebase";
 import { firebaseConfig } from "../config.firebase";
 import { makeRedirectUri } from "expo-auth-session";
+import { useCurrentUser } from "../context/User";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -16,11 +17,11 @@ if (!firebase.apps.length) {
 }
 
 export default function GoogleAuth({ onPressAditional, disabled }: any) {
-  const redirectUri = makeRedirectUri({ useProxy: true });
+  const { setCurrentUser } = useCurrentUser();
 
   // Official expo documentation
   // https://docs.expo.io/guides/authentication/#google
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  const [_, response, promptAsync] = Google.useIdTokenAuthRequest({
     expoClientId:
       "169631416443-a9lhd47m4pkm8epdigb55fippcp7gr5e.apps.googleusercontent.com",
     iosClientId: "GOOGLE_GUID.apps.googleusercontent.com",
@@ -28,7 +29,6 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
       "169631416443-am9l3tm26km98i1bf2k2lc54ejpak81p.apps.googleusercontent.com",
     webClientId:
       "169631416443-a9lhd47m4pkm8epdigb55fippcp7gr5e.apps.googleusercontent.com",
-    redirectUri,
   });
 
   React.useEffect(() => {
@@ -36,12 +36,18 @@ export default function GoogleAuth({ onPressAditional, disabled }: any) {
       const { id_token } = response.params;
 
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-      firebase.auth().signInWithCredential(credential);
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then((user) => {
+          if (user) {
+            setCurrentUser(user.user!);
+          }
+        });
     }
   }, [response]);
 
   const handleLogin = () => {
-    console.log(redirectUri);
     promptAsync({ useProxy: true });
     onPressAditional && onPressAditional();
   };

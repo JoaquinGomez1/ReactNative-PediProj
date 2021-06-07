@@ -11,6 +11,7 @@ import MyButton from "./Button";
 import { View } from "./Themed";
 import { Commerce } from "../types";
 import { LatLng } from "react-native-maps";
+import useCategories from "../hooks/useCategories";
 
 interface FormCommerceProps {
   buttonStyle?: StyleProp<ViewStyle>;
@@ -24,12 +25,11 @@ interface InputTypes {
   textChangeHandler: (text: string) => void;
   placeholder: string;
   key?: keyof LatLng;
-  keyboard?: "numeric";
+  keyboard?: "numeric" | "number-pad";
 }
 
 const handleNumericInputs = (numberString: string): number => {
   try {
-    if (!numberString || isNaN(Number.parseInt(numberString))) return 0;
     return Number.parseFloat(numberString);
   } catch (err) {
     console.log("Something went wrong ", err);
@@ -97,7 +97,7 @@ const allInputs = (
     },
     key: "latitude",
     placeholder: "Latitud",
-    keyboard: "numeric",
+    keyboard: "number-pad",
   },
   {
     name: "category",
@@ -121,6 +121,7 @@ export default function FormCommerce({
   const [currentCommerceData, setCurrentCommerceData] = useState<Commerce>(
     commerceData || blankCommerce
   );
+  const { categories } = useCategories();
 
   return (
     <View style={styles.container}>

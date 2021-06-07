@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "../../components/Themed";
 import ProductForm from "../../components/FormAddProduct";
-import { blankProduct } from "../../constants/MockData";
 import Layout from "../../constants/Layout";
 import { BASE_URL } from "../../constants/Common";
 import { Product } from "../../types";
@@ -24,6 +23,9 @@ export default function EditProductScreen({ route }: any) {
 
     if (req.status === 200) {
       alert("Producto actualizado correctamente");
+    } else {
+      alert("Algo salió mal al actualizar el producto");
+      console.log(JSON.stringify(req, null, 2));
     }
     setIsFetching(false);
   };

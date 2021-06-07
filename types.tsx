@@ -37,9 +37,9 @@ export type Product = {
   title: string;
   description?: string;
   img: string;
-  units: number;
+  units: number | undefined;
   maxUnits?: number;
-  price: number;
+  price: number | undefined;
   available?: boolean;
   createdDate?: Date;
   commerce: Commerce["id"];
@@ -90,7 +90,10 @@ export type UserState = {
 };
 
 export type UserActions = {
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<firebase.default.User | null>;
   // loginWithFirebase: () => void;
   logout: () => void;
   signup: (user: User, password: string) => void;
@@ -129,4 +132,17 @@ export type CommercesActions = {
   deleteCommerce: (commerce: Product) => void;
   deleteCommerceById: (commerceId: number | string) => void;
   updateCommerce: (commerce: Product) => void;
+};
+
+export type Customer_Order = {
+  products: Array<Product>;
+  orderData: Order;
+};
+
+export type Order = {
+  id?: number;
+  customerName: string;
+  email: string;
+  address: string;
+  total: number;
 };
