@@ -12,7 +12,6 @@ import Colors from "../constants/Colors";
 import Layout from "../constants/Layout";
 import { useCommercesProvider } from "../context/Commerces";
 import useCategories from "../hooks/useCategories";
-import useCommerces from "../hooks/useCommerce";
 import handleNewRequest from "../libs/handleNewRequest";
 import { Category as CategoryType, Commerce as CommerceType } from "../types";
 
@@ -28,15 +27,17 @@ export default function CommerceListScreen({
 }: React.PropsWithRef<CommerceDetailScreen>) {
   const { commerceList: initialData } = useCommercesProvider();
   const [isLoading, setIsLoading] = useState(false);
-  const [localCommercesList, setLocalCommercesList] =
-    useState<CommerceType[] | []>(initialData);
+  const [localCommercesList, setLocalCommercesList] = useState<
+    CommerceType[] | []
+  >(initialData);
 
   useEffect(() => {
     setLocalCommercesList(initialData);
   }, [initialData]);
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<number | string | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<
+    number | string | undefined
+  >();
 
   const { categories } = useCategories();
 
@@ -49,13 +50,13 @@ export default function CommerceListScreen({
 
   const handleTextChanged = (text: string) => {
     const regex = new RegExp(text, "gi");
-    const filteredList = initialData.filter((each) =>
+    const filteredList = initialData?.filter((each) =>
       selectedCategory
-        ? regex.test(each.name) && each.category === selectedCategory
+        ? regex.test(each.name) && each?.category === selectedCategory
         : regex.test(each.name)
     );
 
-    const foundOnLocalData = filteredList.length >= 1;
+    const foundOnLocalData = filteredList?.length >= 1;
     if (foundOnLocalData) setLocalCommercesList(filteredList);
     else {
       // If the shop wasn't found on local data. make a request to the server
@@ -75,7 +76,7 @@ export default function CommerceListScreen({
       setSelectedCategory(undefined);
       return;
     }
-    const filteredCommerces = initialData.filter(
+    const filteredCommerces = initialData?.filter(
       (each) => each.category === id
     );
     setLocalCommercesList(filteredCommerces);

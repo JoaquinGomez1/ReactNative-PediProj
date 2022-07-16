@@ -44,7 +44,7 @@ export default function TabOneScreen({ navigation, route }: any) {
       <View style={styles.container}>
         <View style={styles.subheader}>
           <Text style={styles.subheaderText}>
-            Hola. {currentUser?.displayName || currentUser?.email}
+            Hola {currentUser?.displayName || currentUser?.email?.split("@")[0]}
           </Text>
           <CurrentUserAvatar />
         </View>

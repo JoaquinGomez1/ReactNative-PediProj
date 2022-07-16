@@ -77,11 +77,12 @@ const buttonStyle = (
       width: "100%",
       marginVertical: Layout.spacing[1],
       paddingHorizontal: Layout.spacing[1],
-      paddingVertical: 3,
+      paddingVertical: Layout.spacing[1],
       borderColor: buttonColors.borderColor[appliedStyle],
       borderWidth: 2,
       borderRadius: 5,
       backgroundColor: buttonColors.backgroundColor[appliedStyle],
+      justifyContent: "center",
     },
     buttonText: {
       fontSize: 20,

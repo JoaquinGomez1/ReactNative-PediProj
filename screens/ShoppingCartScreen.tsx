@@ -14,7 +14,7 @@ import { Customer_Order } from "../types";
 import { useCurrentUser } from "../context/User";
 import handleNewRequest from "../libs/handleNewRequest";
 
-export default function ShoppingCart({ navigation, route }: any) {
+export default function ShoppingCartScreen({ navigation, route }: any) {
   const { cart, cartFunctions } = useCart();
   const [modalOpen, setModalOpen] = useState(false);
   const [address, setAddress] = useState<string>("");

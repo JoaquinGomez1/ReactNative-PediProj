@@ -5,27 +5,19 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import HomeScreen from "../screens/HomeScreen";
-import CommerceScreen from "../screens/CommerceListScreen";
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
-import ProductDetail from "../screens/ProductDetail";
-import ShoppingCart from "../screens/ShoppingCart";
+import { BottomTabParamList, TabOneParamList } from "../types";
+import ProductDetail from "../screens/ProductDetailScreen";
 import { StyleSheet, Text } from "react-native";
 import { useCart } from "../context/Cart";
 import { useCurrentUser } from "../context/User";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
-import UserScreen from "../screens/UserScreen";
 import LoadingScreen from "../screens/LoadingScreen";
-import CommerceDetailScreen from "../screens/CommerceDetailScreen";
-import AdminPanelScreen from "../screens/AdminPanelScreen";
-import ManageProductsScreen from "../screens/ManageProductScreen";
-import ManageCommercesScreen from "../screens/ManageCommerceScreen";
-import AddProductScreen from "../screens/ManageProductScreen/AddProductScreen";
-import AddCommerceScreen from "../screens/ManageCommerceScreen/AddCommerceScreen";
-import EditProductScreen from "../screens/ManageProductScreen/EditProductScreen";
-import OrdersListScreen from "../screens/OrdersListScreen";
+import { UserNavigator } from "./UserStack";
+import { CartNavigator } from "./CartStack";
+import { CategoriesNavigator } from "./CategoriesStack";
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const DefaultTab = createBottomTabNavigator<BottomTabParamList>();
 
 type NavigatorArrayContent = {
   name: keyof BottomTabParamList;
@@ -37,7 +29,7 @@ type NavigatorArrayContent = {
 const appNavigators: Array<NavigatorArrayContent> = [
   { name: "Home", component: HomeNavigator, iconName: "home", auth: true },
   {
-    name: "Comercios",
+    name: "Commerces",
     component: CategoriesNavigator,
     iconName: "folder-open",
     auth: true,
@@ -54,20 +46,16 @@ export default function BottomTabNavigator() {
   const [isLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (currentUser && Object.keys(currentUser).length >= 1) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+    currentUser && setIsLoggedIn(!!currentUser.uid);
   }, [currentUser]);
 
   return (
-    <BottomTab.Navigator
+    <DefaultTab.Navigator
       initialRouteName="Home"
       tabBarOptions={{ activeTintColor: Colors.colors.red[500] }}
     >
       {isLoading ? (
-        <BottomTab.Screen
+        <DefaultTab.Screen
           key={"loadingscreen"}
           name="Loading"
           component={LoadingScreen}
@@ -76,7 +64,7 @@ export default function BottomTabNavigator() {
         appNavigators?.map(
           ({ name, component, iconName, auth }) =>
             isLoggedIn === auth && (
-              <BottomTab.Screen
+              <DefaultTab.Screen
                 key={name}
                 name={name!}
                 component={component!}
@@ -93,7 +81,7 @@ export default function BottomTabNavigator() {
             )
         )
       )}
-    </BottomTab.Navigator>
+    </DefaultTab.Navigator>
   );
 }
 
@@ -132,109 +120,21 @@ function TabBarIcon(props: {
 }
 
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const HomeStack = createStackNavigator<TabOneParamList>();
 
 function HomeNavigator() {
   return (
-    <TabOneStack.Navigator screenOptions={{ headerShown: false }}>
-      <TabOneStack.Screen
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerTitle: "Tab One Title" }}
       />
-      <TabOneStack.Screen
+      <HomeStack.Screen
         name="ProductDetail"
         component={ProductDetail}
         options={{ headerShown: true, headerTitle: "Producto" }}
       />
-    </TabOneStack.Navigator>
-  );
-}
-
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
-
-function CategoriesNavigator() {
-  return (
-    <TabTwoStack.Navigator initialRouteName={"CommercesScreen"}>
-      <TabTwoStack.Screen
-        name="CommercesScreen"
-        component={CommerceScreen}
-        options={{ headerShown: false }}
-      />
-      <TabTwoStack.Screen
-        name="CommerceDetailScreen"
-        component={CommerceDetailScreen}
-        options={{ title: "Ver local" }}
-      />
-    </TabTwoStack.Navigator>
-  );
-}
-
-const CartStack = createStackNavigator();
-
-function CartNavigator() {
-  return (
-    <CartStack.Navigator>
-      <CartStack.Screen
-        name="Cart"
-        options={{ headerTitle: "Carrito" }}
-        component={ShoppingCart}
-      />
-    </CartStack.Navigator>
-  );
-}
-
-const UserStack = createStackNavigator();
-
-function UserNavigator() {
-  return (
-    <UserStack.Navigator initialRouteName="User">
-      <UserStack.Screen
-        name="User"
-        options={{ headerShown: true }}
-        component={UserScreen}
-      />
-
-      <UserStack.Screen
-        name="AdminPanel"
-        options={{ headerShown: true, title: "Admin Panel" }}
-        component={AdminPanelScreen}
-      />
-
-      <UserStack.Screen
-        name="OrdersList"
-        options={{ headerShown: true, title: "Ver Ordenes" }}
-        component={OrdersListScreen}
-      />
-
-      <UserStack.Screen
-        name="ManageProducts"
-        options={{ headerShown: true, title: "Gestionar Productos" }}
-        component={ManageProductsScreen}
-      />
-
-      <UserStack.Screen
-        name="AddProduct"
-        options={{ headerShown: true, title: "Agregar Producto" }}
-        component={AddProductScreen}
-      />
-      <UserStack.Screen
-        name="EditProduct"
-        options={{ headerShown: true, title: "Editar Producto" }}
-        component={EditProductScreen}
-      />
-
-      <UserStack.Screen
-        name="AddCommerce"
-        options={{ headerShown: true, title: "Agregar Comercio" }}
-        component={AddCommerceScreen}
-      />
-
-      <UserStack.Screen
-        name="ManageCommerces"
-        options={{ headerShown: true, title: "Gestionar comercios" }}
-        component={ManageCommercesScreen}
-      />
-    </UserStack.Navigator>
+    </HomeStack.Navigator>
   );
 }

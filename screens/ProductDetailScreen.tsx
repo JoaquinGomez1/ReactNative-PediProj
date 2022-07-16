@@ -9,7 +9,6 @@ import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import cartContext from "../context/Cart";
 import Colors from "../constants/Colors";
-import useCommerces from "../hooks/useCommerce";
 import useInitialFetch from "../hooks/useInitialFetch";
 
 interface ProductDetailsProps {
@@ -17,19 +16,19 @@ interface ProductDetailsProps {
   navigation: any;
 }
 
-export default function ProductDetail({
+export default function ProductDetailScreen({
   route,
   navigation,
 }: React.PropsWithoutRef<ProductDetailsProps>) {
   const productId = route?.params?.id;
   const product: Product = route?.params?.product;
+
   const { cartFunctions } = useContext(cartContext);
   const { data: commerceSelected } = useInitialFetch(
     "/commerces/" + product.commerce
   );
 
-  if (!productId || !Object.keys(product))
-    navigation.navigate("Home", { screen: "Home" });
+  if (!productId) navigation.navigate("Home", { screen: "Home" });
 
   const handleNavigation = () => {
     navigation.navigate("Comercios", {
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     width: 370,
-    backgroundColor: "#b3b3b3",
+    backgroundColor: Colors.colors.borders,
     height: 1,
     marginVertical: 15,
   },

@@ -34,7 +34,7 @@ export function CartProvider(props: any) {
         // https://github.com/microsoft/TypeScript/issues/36390#issuecomment-641718624
         // cannot use cart.reduce directly for now
         return (cart as Product[]).reduce(
-          (acc, { price, units }) => acc + units * price,
+          (acc, { price, units }) => acc + units! * price!,
           0
         );
       },

@@ -12,9 +12,11 @@ import { emailRegex } from "../constants/Common";
 
 export default function LoginScreen({ navigation }: any) {
   const { userFunctions, setCurrentUser } = useCurrentUser();
+
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [animationStarted, setAnimationStarted] = React.useState(false);
+
   const animationPassed = React.useRef<LottieView>(null);
   const ANIM_DURATION = 2.2 * 1000; // 2.2 Secs
 
@@ -30,13 +32,13 @@ export default function LoginScreen({ navigation }: any) {
     animationPassed?.current?.play(0, 59);
 
     userFunctions.login(email, password).then((user) => {
-      if (user !== null) {
+      if (!user) {
         animationPassed && animationPassed?.current?.play(59, 120);
 
         // Wait for animation to complete and then set the current user
         setTimeout(() => {
           setAnimationStarted(false);
-          setCurrentUser(user);
+          setCurrentUser(user!);
         }, ANIM_DURATION);
       } else {
         setAnimationStarted(false);
@@ -53,6 +55,7 @@ export default function LoginScreen({ navigation }: any) {
         lightColor="#eee"
         darkColor="rgba(255, 255, 255, 0.1)"
       />
+
       <View style={LottieStyles(animationStarted).container}>
         <LottieView
           style={LottieStyles(animationStarted).animation}
@@ -62,6 +65,7 @@ export default function LoginScreen({ navigation }: any) {
           loop={false}
         />
       </View>
+
       <View style={{ width: "100%", paddingHorizontal: 20 }}>
         <TextInput
           style={styles.input}
@@ -76,11 +80,11 @@ export default function LoginScreen({ navigation }: any) {
           onChangeText={(text) => setPassword(text)}
         />
         <MyButton title="Login" onPress={() => handleLogin(email, password)} />
-        <Text style={{ textAlign: "center", marginBottom: 10 }}>Or</Text>
+        <Text style={{ textAlign: "center", marginBottom: 10 }}>O sino</Text>
         <GoogleAuth />
       </View>
       <View style={styles.bottomInfo}>
-        <Text style={styles.bottomInfoText}>Todavia no tenes una cuenta?</Text>
+        <Text style={styles.bottomInfoText}>Todavía no tenés una cuenta?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
           <Text
             style={[styles.bottomInfoText, { color: Colors.colors.red[600] }]}

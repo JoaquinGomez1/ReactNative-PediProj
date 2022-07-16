@@ -11,7 +11,6 @@ import MyButton from "./Button";
 import { View } from "./Themed";
 import { Commerce } from "../types";
 import { LatLng } from "react-native-maps";
-import useCategories from "../hooks/useCategories";
 
 interface FormCommerceProps {
   buttonStyle?: StyleProp<ViewStyle>;
@@ -121,7 +120,6 @@ export default function FormCommerce({
   const [currentCommerceData, setCurrentCommerceData] = useState<Commerce>(
     commerceData || blankCommerce
   );
-  const { categories } = useCategories();
 
   return (
     <View style={styles.container}>

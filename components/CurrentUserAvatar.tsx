@@ -17,7 +17,7 @@ export default function CurrentUserAvatar(
       source={{
         uri: currentUser?.photoURL || DEFAULT_USER_IMAGE,
       }}
-      style={styles.userImage}
+      style={[styles.userImage, props.style]}
     />
   );
 }
